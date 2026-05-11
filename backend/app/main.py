@@ -4,9 +4,11 @@ from app.database import engine
 from app.models import Base
 
 # on startup
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     Base.metadata.create_all(bind=engine)
+
+
 
 
 app = FastAPI(title="NYC Waste Helper", lifespan=lifespan)
