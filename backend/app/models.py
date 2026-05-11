@@ -73,7 +73,7 @@ class Schedule(Base):
     # add specifics for type of waste picking up
 
 
-
+# junction table 
 collections_collection_types = Table(
     "collections_collection_types",
     Base.metadata,
