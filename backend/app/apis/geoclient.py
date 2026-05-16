@@ -6,7 +6,7 @@ import json
 
 load_dotenv()
 
-def send_failed_response(error_code, error_message) -> ScheduleResponse:
+def send_failed_response(error_code, error_message=None) -> ScheduleResponse:
     errors = {
         400: "Request failed due to invalid input. Please review and resubmit",
         401: "Please provide a valid API key for geoclient API",
@@ -22,7 +22,7 @@ def send_failed_response(error_code, error_message) -> ScheduleResponse:
             error_message=error_message or errors.get(error_code) or "Error occurred while submitting request to Geoclient"
         )
 
-def convert_schedule(initials) -> list:
+def convert_schedule(initials: str) -> list:
     """ Convert schedule initials to full days of week M - Sat"""
     if not initials:
         return []
@@ -49,7 +49,7 @@ def convert_schedule(initials) -> list:
     return converted_schedule
         
 
-def get_sanitation_info(input_addr) -> ScheduleResponse:
+def get_sanitation_info(input_addr: str) -> ScheduleResponse:
     url = f"https://api.nyc.gov/geoclient/v2/search?input={input_addr}&returnPossiblesWithExact=true"
     headers = {
     'Cache-Control': 'no-cache',
@@ -58,13 +58,16 @@ def get_sanitation_info(input_addr) -> ScheduleResponse:
     try:
         response = requests.get(url=url, headers=headers, timeout=15)
     except requests.exceptions.Timeout:
-        send_failed_response(504, "Geoclient API request timed out")
+        return send_failed_response(504, "Geoclient API request timed out")
         
     except requests.exceptions.ConnectionError:
-        send_failed_response(503, "Geoclient API connection error")
+        return send_failed_response(503, "Geoclient API connection error")
 
-    if response.status_code !=200 or response.json().get("results")[0].get("status") == "REJECTED":
-        send_failed_response(response.status_code,"Temporary generic error message for now!")
+    if response.status_code !=200:
+        return send_failed_response(response.status_code,"Error Occurred when submitting to Geoclient API")
+    
+    if response.json().get("status") == "REJECTED":
+        return send_failed_response(400, "Invalid address input sent to Geoclient API, review and resubmit")
     # debug print statement
     # print(json.dumps(response.json(), indent=4))
     # print(json.dumps(response.json().get("results"), indent=4))
