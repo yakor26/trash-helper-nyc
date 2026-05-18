@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
-from pydantic_extra_types import PhoneNumber
+from pydantic_extra_types.phone_numbers import PhoneNumber
 import string
 
 # user authentication
@@ -44,7 +44,6 @@ class UserUpdate(BaseModel):
 
 class UserBase(BaseModel):
     username: str
-    name: str
     email: EmailStr
     phone_number: PhoneNumber
     allow_notifications: bool

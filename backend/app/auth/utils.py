@@ -1,17 +1,21 @@
 from dotenv import load_dotenv
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.responses import JSONResponse
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models import User
 from app.schemas.user import UserInDB, UserBase
+from app.schemas.token import Token
 import jwt
 import os
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+load_dotenv()
+ACCESS_SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
+REFRESH_SECRET_KEY = os.getenv("REFRESH_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINS = 15
 REFRESH_TOKEN_EXPIRE_DAYS = 7
@@ -20,6 +24,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 credentials_exceptions = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Could not validate credentials",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+refresh_token_exceptions = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Refresh token is missing or invalid",
     headers={"WWW-Authenticate": "Bearer"},
 )
 
@@ -38,13 +47,41 @@ def get_user_by_username(db: Session, username: str) -> UserInDB:
         return None
     return UserInDB.model_validate(user)
 
-def create_access_token(data: dict) -> str:
-    """ Create JWT access token """
+def create_token(data: dict, token_type: str = "access") -> str:
+    """ Create JWT access and refresh token """
+    secret_key = ACCESS_SECRET_KEY if token_type == "access" else REFRESH_SECRET_KEY
     data_payload = data.copy()
     expiration = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINS)
+    if token_type == "refresh":
+        expiration = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     data_payload.update({"exp": expiration})
-    jwt_token = jwt.encode(data_payload, SECRET_KEY, ALGORITHM)
+    jwt_token = jwt.encode(data_payload, secret_key, ALGORITHM)
     return jwt_token
+
+def decode_token(token: str, token_type: str = "access"):
+    """ Decode and validate tokens"""
+    secret_key = ACCESS_SECRET_KEY if token_type == "access" else REFRESH_SECRET_KEY
+    try:
+        data_payload = jwt.decode(token, secret_key, algorithms=[ALGORITHM])
+        username = data_payload.get("sub")
+        # no username in token
+        if username is None:
+            raise credentials_exceptions
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is expired")
+    except InvalidTokenError:
+        raise credentials_exceptions
+
+    return username
+
+def set_tokens(username: str) -> Token:
+    """ generate access and refresh tokens"""
+    access_token = create_token(data={"sub": username})
+    refresh_token = create_token(data={"sub": username}, token_type="refresh")
+    response = JSONResponse({"access_token": access_token, "username": username}, status_code=status.HTTP_200_OK)
+    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60)
+    # return access token and set refresh token in cookie
+    return Token(access_token=access_token, token_type="bearer")
 
 
 def auth_user(db: Session, username: str, password: str):
@@ -58,5 +95,7 @@ def auth_user(db: Session, username: str, password: str):
     if not verify_password(password, user_db.hashed_password):
         return False
     return UserBase.model_validate(user_db)
+
+
 
 
