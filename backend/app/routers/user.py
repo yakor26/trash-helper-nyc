@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from app.schemas.address import ScheduleRequest, GeoclientAPIResponse
+from app.schemas.address import GeoclientAPIResponse
 from app.apis.geoclient import get_sanitation_info
 from app.crud.user import update_user
 from app.schemas.user import UserUpdate, UserBase

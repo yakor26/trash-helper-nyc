@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from app.schemas.address import ScheduleRequest, GeoclientAPIResponse
+from app.schemas.address import GeoclientAPIResponse
 import requests
 import os
 import json
@@ -90,14 +90,14 @@ def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
             "address": {
                 "street_address": street_address,
                 "city": city,
-                "zipcode": zipcode
+                "zip_code": zipcode
 
             },
             "sanitation": {
                 "days_trash": trash_pickup,
                 "days_compost": compost_pickup,
                 "days_recycling": recycling_pickup,
-                "days_large_item": large_item_pickup
+                "days_large_items": large_item_pickup
             }
         }
     )

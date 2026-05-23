@@ -11,11 +11,11 @@ from app.schemas.schedule import ScheduleResponse
 
 def get_schedule(db: Session, schedule: GeoclientAPIResponse) -> ScheduleResponse:
     sanitation_schedule = schedule.data.get("sanitation")
-    schedule_exists = db.execute(select(Schedule.id).where(
+    schedule_exists = db.execute(select(Schedule).where(
         Schedule.days_trash == sanitation_schedule.get("days_trash"),
         Schedule.days_recycling == sanitation_schedule.get("days_recycling"),
         Schedule.days_compost == sanitation_schedule.get("days_compost"),
-        Schedule.days_large_items == sanitation_schedule.get("days_large_items"))).scalar_one_or_none
+        Schedule.days_large_items == sanitation_schedule.get("days_large_items"))).scalar_one_or_none()
     return ScheduleResponse.model_validate(schedule_exists) if schedule_exists else None
 
 
@@ -33,7 +33,7 @@ def create_schedule(db: Session, schedule: GeoclientAPIResponse) -> ScheduleResp
     # schedule already in db
     if schedule_exists:
         return None
-    new_schedule = Address(**sanitation_schedule)
+    new_schedule = Schedule(**sanitation_schedule)
     db.add(new_schedule)
     db.commit()
     db.refresh(new_schedule)
