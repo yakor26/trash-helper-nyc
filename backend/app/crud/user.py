@@ -18,7 +18,7 @@ def create_user(db: Session, user: UserCreate, hashed_password):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return new_user
+    return UserBase.model_validate(new_user)
 
 
 def get_user_by_username(db: Session, username: str) -> UserBase:

@@ -94,10 +94,10 @@ def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
 
             },
             "sanitation": {
-                "trash_pickup": trash_pickup,
-                "compost_pickup": compost_pickup,
-                "recycling_pickup": recycling_pickup,
-                "large_item_pickup": large_item_pickup
+                "days_trash": trash_pickup,
+                "days_compost": compost_pickup,
+                "days_recycling": recycling_pickup,
+                "days_large_item": large_item_pickup
             }
         }
     )
