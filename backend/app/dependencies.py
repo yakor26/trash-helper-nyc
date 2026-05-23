@@ -35,7 +35,7 @@ def get_curr_user(
     # validate user and return public user info
     user = UserBase.model_validate(db_user)
     return user
-    
-    
+
+
 db_depend = Annotated[Session, Depends(get_db)]
 user_depend = Annotated[UserBase, Depends(get_curr_user)]

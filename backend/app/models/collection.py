@@ -30,7 +30,7 @@ class Collection(Base):
     schedule_id = mapped_column(Integer, ForeignKey("schedules.id"), nullable=False)
     address_id = mapped_column(Integer, ForeignKey("addresses.id"), nullable=False)
     collection_date: Mapped[date] = mapped_column(Date, nullable=False)
-    status: Mapped[CollectionStatus] = mapped_column(Enum(CollectionStatus))
+    status: Mapped[CollectionStatus] = mapped_column(Enum(CollectionStatus), nullable=False)
     schedule: Mapped["Schedule"] = relationship(back_populates="collections")
     address: Mapped["Address"] = relationship(back_populates="collections")
     collection_types: Mapped[List["CollectionType"]] = relationship(

@@ -1,14 +1,15 @@
 from dotenv import load_dotenv
-from app.schemas.address import ScheduleRequest, ScheduleResponse
+from app.schemas.address import ScheduleRequest, GeoclientAPIResponse
 import requests
 import os
 import json
 
 load_dotenv()
 
-def send_failed_response(error_code, error_message=None) -> ScheduleResponse:
+
+def send_failed_response(error_code, error_message=None) -> GeoclientAPIResponse:
     errors = {
-        400: "Request failed due to invalid input. Please review and resubmit",
+        400: "Request failed due to invalid input. Please review address and resubmit",
         401: "Please provide a valid API key for geoclient API",
         429: "Too many requests to Geoclient API, try again",
         500: "Error submitting request to Geoclient API",
@@ -16,11 +17,12 @@ def send_failed_response(error_code, error_message=None) -> ScheduleResponse:
         504: "GeoclientAPI request timed out"
 
     }
-    return ScheduleResponse(
-            status= "failed",
+    return GeoclientAPIResponse(
+            status="failed",
             error_code=error_code or 500,
             error_message=error_message or errors.get(error_code) or "Error occurred while submitting request to Geoclient"
         )
+
 
 def convert_schedule(initials: str) -> list:
     """ Convert schedule initials to full days of week M - Sat"""
@@ -49,7 +51,7 @@ def convert_schedule(initials: str) -> list:
     return converted_schedule
         
 
-def get_sanitation_info(input_addr: str) -> ScheduleResponse:
+def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
     url = f"https://api.nyc.gov/geoclient/v2/search?input={input_addr}&returnPossiblesWithExact=true"
     headers = {
     'Cache-Control': 'no-cache',
@@ -77,20 +79,33 @@ def get_sanitation_info(input_addr: str) -> ScheduleResponse:
     compost_pickup = convert_schedule(results.get("sanitationOrganicsCollectionSchedule"))
     recycling_pickup = convert_schedule(results.get("sanitationRecyclingCollectionSchedule"))
     large_item_pickup = convert_schedule(results.get("sanitationBulkPickupSchedule"))
-    return ScheduleResponse(
+    street_address = f"{
+        results.get("houseNumber")} {results.get("streetName1In")}"
+    city = results.get("uspsPreferredCityName")
+    zipcode = results.get("zipCode")
+
+    return GeoclientAPIResponse(
         status="success",
         data={
-            "trash_pickup": trash_pickup,
-            "compost_pickup": compost_pickup,
-            "recycling_pickup": recycling_pickup,
-            "large_item_pickup": large_item_pickup
+            "address": {
+                "street_address": street_address,
+                "city": city,
+                "zipcode": zipcode
+
+            },
+            "sanitation": {
+                "trash_pickup": trash_pickup,
+                "compost_pickup": compost_pickup,
+                "recycling_pickup": recycling_pickup,
+                "large_item_pickup": large_item_pickup
+            }
         }
     )
 
 
-def test_user_address() -> ScheduleResponse:
+def test_user_address() -> GeoclientAPIResponse:
     """ Test input calls made to api"""
-    full_user_address = ScheduleResponse(full_address=input("Enter Full Address: "))
+    full_user_address = GeoclientAPIResponse(full_address=input("Enter Full Address: "))
     return get_sanitation_info(full_user_address)
 
 

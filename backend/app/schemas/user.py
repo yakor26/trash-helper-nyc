@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 from pydantic_extra_types.phone_numbers import PhoneNumber
 import string
+from datetime import datetime
 
 
 # user authentication
@@ -10,6 +11,7 @@ class UserCreate(BaseModel):
     last_name: str | None = None
     email: EmailStr
     phone_number: PhoneNumber
+    allow_notifications: bool = False
     password: str = Field(min_length=12, max_length=100)
     confirm_password: str = Field(min_length=12, max_length=100)
 
@@ -49,7 +51,6 @@ class UserBase(BaseModel):
     email: EmailStr
     phone_number: PhoneNumber
     allow_notifications: bool
-    password: str
     addresses: list = []
     # set to allow create pydantic model from queries
     model_config = ConfigDict(from_attributes=True)
@@ -58,4 +59,4 @@ class UserBase(BaseModel):
 class UserInDB(UserBase):
     id: int
     hashed_password: str
-    created_at: str
+    created_at: datetime

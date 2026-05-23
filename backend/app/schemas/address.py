@@ -1,4 +1,22 @@
 from pydantic import BaseModel, Field, field_validator
+from app.models.address import AddressType
+
+
+class AddressCreate(BaseModel):
+    full_address: str = Field(min_length=2, max_length=300)
+    address_type: AddressType
+
+
+class AddressResponse(BaseModel):
+    id: int
+    address_type: AddressType
+    schedule_id: int
+    street_address: str
+    city: str
+    zip_code: str
+
+
+
 
 class ScheduleRequest(BaseModel):
     full_address: str = Field(min_length=3, max_length=300)
@@ -12,7 +30,7 @@ class ScheduleRequest(BaseModel):
     #         raise ValueError("Invalid Zipcode")
         
 
-class ScheduleResponse(BaseModel):
+class GeoclientAPIResponse(BaseModel):
     status: str
     error_code: int | None = None
     error_message: str | None = None
