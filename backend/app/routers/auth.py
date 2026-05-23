@@ -6,13 +6,13 @@ from app.schemas.user import UserCreate, UserBase
 from app.auth.utils import get_user_by_username, set_tokens, oauth2_scheme, refresh_token_exceptions
 from app.auth.utils import get_hashed_password, decode_token, credentials_exceptions, auth_user, create_token
 from app.crud.user import get_user_by_username as crud_get_user
-from app.models import User
+from app.models.user import User
 from app.schemas.token import Token
 from sqlalchemy.exc import IntegrityError
 
 
-
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
 
 @router.post("/register")
 def register_user(user: UserCreate, db: db_depend) -> Token:
@@ -38,9 +38,10 @@ def register_user(user: UserCreate, db: db_depend) -> Token:
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username or email already exists")
-    # create tokens 
+    # create tokens
     return set_tokens(user.username)
-    
+
+
 @router.post("/login")
 def login_user(login_data: Annotated[oauth, Depends()], db: db_depend) -> Token:
     """ Login user and provide tokens"""
@@ -49,6 +50,7 @@ def login_user(login_data: Annotated[oauth, Depends()], db: db_depend) -> Token:
     if not user:
         raise credentials_exceptions
     return set_tokens(user.username)
+
 
 @router.post("/refresh")
 def refresh_token(refresh_token: Annotated[str, Depends(get_cookie_auth)], db: db_depend) -> Token:
@@ -67,9 +69,8 @@ def refresh_token(refresh_token: Annotated[str, Depends(get_cookie_auth)], db: d
     access_token = create_token(data={"sub": user.username}, token_type="access")
     return Token(access_token=access_token, token_type="bearer")
 
-    
+
 @router.get("/me")
 def get_user(user: user_depend, db: db_depend) -> UserBase:
     """ Get current user info"""
     return user
-

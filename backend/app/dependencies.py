@@ -7,21 +7,24 @@ from app.schemas.user import UserBase
 from app.auth.utils import oauth2_scheme, credentials_exceptions, decode_token, get_user_by_username
 
 
-
 def get_db():
     """ Dependency for db session"""
     with SessionLocal() as db:
         yield db
 
+
 def get_cookie_auth(request: Request):
     """ Check cookie for refresh token"""
-    refresh_token= request.cookies.get("refresh_token")
+    refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         return None
     return refresh_token
 
 
-def get_curr_user(token: Annotated[str, Depends(oauth2_scheme)], db: Annotated[Session, Depends(get_db)]) -> UserBase:
+def get_curr_user(
+        token: Annotated[str, Depends(oauth2_scheme)],
+        db: Annotated[Session, Depends(get_db)]
+        ) -> UserBase:
     """ Dependency to get current user based on token"""
     username = decode_token(token)
     # decode token will raise exception if invalid
@@ -36,7 +39,3 @@ def get_curr_user(token: Annotated[str, Depends(oauth2_scheme)], db: Annotated[S
     
 db_depend = Annotated[Session, Depends(get_db)]
 user_depend = Annotated[UserBase, Depends(get_curr_user)]
-
-
-        
-

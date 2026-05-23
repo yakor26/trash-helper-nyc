@@ -2,8 +2,9 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from app.models import Base
+from app.database import Base
 from dotenv import load_dotenv
+from app import models
 import os
 
 load_dotenv()
@@ -19,7 +20,6 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
@@ -41,7 +41,6 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,

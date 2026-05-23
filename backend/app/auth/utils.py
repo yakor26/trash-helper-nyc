@@ -6,7 +6,7 @@ from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from app.models import User
+from app.models.user import User
 from app.schemas.user import UserInDB, UserBase
 from app.schemas.token import Token
 import jwt
@@ -17,7 +17,7 @@ load_dotenv()
 ACCESS_SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
 REFRESH_SECRET_KEY = os.getenv("REFRESH_SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINS = 15
+ACCESS_TOKEN_EXPIRE_MINS = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 password_hasher = PasswordHash.recommended()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -32,13 +32,16 @@ refresh_token_exceptions = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
+
 def get_hashed_password(password: str) -> str:
     """ Hash and return user password """
     return password_hasher.hash(password)
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """ Validate user password"""
     return password_hasher.verify(plain_password, hashed_password)
+
 
 def get_user_by_username(db: Session, username: str) -> UserInDB:
     """ Get user from db"""
@@ -46,6 +49,7 @@ def get_user_by_username(db: Session, username: str) -> UserInDB:
     if not user:
         return None
     return UserInDB.model_validate(user)
+
 
 def create_token(data: dict, token_type: str = "access") -> str:
     """ Create JWT access and refresh token """
@@ -57,6 +61,7 @@ def create_token(data: dict, token_type: str = "access") -> str:
     data_payload.update({"exp": expiration})
     jwt_token = jwt.encode(data_payload, secret_key, ALGORITHM)
     return jwt_token
+
 
 def decode_token(token: str, token_type: str = "access"):
     """ Decode and validate tokens"""
@@ -73,6 +78,7 @@ def decode_token(token: str, token_type: str = "access"):
         raise credentials_exceptions
 
     return username
+
 
 def set_tokens(username: str) -> Token:
     """ generate access and refresh tokens"""
@@ -95,7 +101,3 @@ def auth_user(db: Session, username: str, password: str):
     if not verify_password(password, user_db.hashed_password):
         return False
     return UserBase.model_validate(user_db)
-
-
-
-

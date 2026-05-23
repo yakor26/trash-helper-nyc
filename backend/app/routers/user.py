@@ -4,6 +4,7 @@ from app.apis.geoclient import get_sanitation_info
 
 router = APIRouter(prefix="/api/user", tags=["user"])
 
+
 @router.post("/address")
 def get_address_schedule(address_req: ScheduleRequest) -> ScheduleResponse:
     response = get_sanitation_info(address_req.full_address)

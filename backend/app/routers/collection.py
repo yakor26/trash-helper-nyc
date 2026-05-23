@@ -4,6 +4,7 @@ from app.apis.nyc_311 import get_collection_status
 
 router = APIRouter(prefix="/api/collection", tags=["collection"])
 
+
 @router.post("/status")
 def collection_status(date_request: CollectionStatusRequest) -> CollectionStatusResponse:
     """ Get nyc sanitation collection status for a date"""
