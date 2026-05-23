@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 from pydantic_extra_types.phone_numbers import PhoneNumber
 import string
 from datetime import datetime
+from app.schemas.address import AddressResponse
 
 
 # user authentication
@@ -51,7 +52,7 @@ class UserBase(BaseModel):
     email: EmailStr
     phone_number: PhoneNumber
     allow_notifications: bool
-    addresses: list = []
+    addresses: list[AddressResponse] = []
     # set to allow create pydantic model from queries
     model_config = ConfigDict(from_attributes=True)
 
