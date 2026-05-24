@@ -14,7 +14,7 @@ def get_user(user: user_depend, db: db_depend) -> UserBase:
     return user
 
 
-@router.patch("/user")
+@router.patch("")
 def update_user_profile(db: db_depend, user: user_depend, update: UserUpdate) -> UserBase:
     """ Update user """
     user = update_user(db=db, user_id=user.id, user_update=update)
@@ -23,6 +23,3 @@ def update_user_profile(db: db_depend, user: user_depend, update: UserUpdate) ->
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Unable to update user")
     return user
-
-
-

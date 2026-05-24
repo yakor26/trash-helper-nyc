@@ -7,6 +7,10 @@ class AddressCreate(BaseModel):
     address_type: AddressType
 
 
+class AddressUpdate(BaseModel):
+    address_type: AddressType
+
+
 class AddressBase(BaseModel):
     user_id: int
     address_type: AddressType

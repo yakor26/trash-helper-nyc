@@ -8,8 +8,6 @@ from app.schemas.address import AddressResponse
 # user authentication
 class UserCreate(BaseModel):
     username: str = Field(min_length=3, max_length=50)
-    first_name: str = Field(min_length=2)
-    last_name: str | None = None
     email: EmailStr
     phone_number: PhoneNumber
     allow_notifications: bool = False
@@ -40,8 +38,6 @@ class UserCreate(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    first_name: str | None = Field(default=None, min_length=2)
-    last_name: str | None = Field(default=None, min_length=2)
     email: EmailStr | None = None
     phone_number: PhoneNumber | None = None
     allow_notifications: bool | None = None
