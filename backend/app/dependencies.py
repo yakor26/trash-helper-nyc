@@ -4,7 +4,12 @@ from fastapi.responses import JSONResponse
 from app.database import SessionLocal
 from typing import Annotated
 from app.schemas.user import UserBase
-from app.auth.utils import oauth2_scheme, credentials_exceptions, decode_token, get_user_by_username
+from app.auth.utils import (
+    oauth2_scheme,
+    credentials_exceptions,
+    refresh_token_exceptions,
+    decode_token,
+    get_user_by_username)
 
 
 def get_db():
@@ -17,7 +22,7 @@ def get_cookie_auth(request: Request):
     """ Check cookie for refresh token"""
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
-        return None
+        raise refresh_token_exceptions
     return refresh_token
 
 

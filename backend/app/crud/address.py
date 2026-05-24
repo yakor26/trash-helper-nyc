@@ -82,4 +82,4 @@ def update_address_type(
               Address.id == address_id).
         values(address_type=update_addr.address_type))
     db.commit()
-    return AddressResponse.model_validate(address)
+    return get_address_by_id(db=db, user_id=user_id, address_id=address_id)

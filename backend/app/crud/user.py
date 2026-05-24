@@ -45,5 +45,4 @@ def update_user(db: Session, user_id: int, user_update: UserUpdate) -> UserBase:
     update_fields = user_update.model_dump(exclude_none=True)
     db.execute(update(User).where(User.id == user_id).values(**update_fields))
     db.commit()
-    # db.refresh(user)
-    return UserBase.model_validate(user)
+    return get_user_by_id(db, user_id)

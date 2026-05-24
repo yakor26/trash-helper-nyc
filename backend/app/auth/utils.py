@@ -80,14 +80,14 @@ def decode_token(token: str, token_type: str = "access"):
     return username
 
 
-def set_tokens(username: str) -> Token:
+def set_tokens(username: str) -> JSONResponse:
     """ generate access and refresh tokens"""
     access_token = create_token(data={"sub": username})
     refresh_token = create_token(data={"sub": username}, token_type="refresh")
     response = JSONResponse({"access_token": access_token, "username": username}, status_code=status.HTTP_200_OK)
     response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60)
     # return access token and set refresh token in cookie
-    return Token(access_token=access_token, token_type="bearer")
+    return response
 
 
 def auth_user(db: Session, username: str, password: str):

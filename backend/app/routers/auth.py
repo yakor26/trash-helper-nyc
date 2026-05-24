@@ -9,13 +9,15 @@ from app.crud.user import get_user_by_username as crud_get_user, create_user
 from app.models.user import User
 from app.schemas.token import Token
 from sqlalchemy.exc import IntegrityError
+from fastapi.responses import JSONResponse
+
 
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
 @router.post("/register")
-def register_user(user: UserCreate, db: db_depend) -> Token:
+def register_user(user: UserCreate, db: db_depend) -> JSONResponse:
     """ Register new user and provide tokens"""
     # confirm username not already exists
     user_exists = crud_get_user(db, user.username)
@@ -27,7 +29,7 @@ def register_user(user: UserCreate, db: db_depend) -> Token:
 
 
 @router.post("/login")
-def login_user(login_data: Annotated[oauth, Depends()], db: db_depend) -> Token:
+def login_user(login_data: Annotated[oauth, Depends()], db: db_depend) -> JSONResponse:
     """ Login user and provide tokens"""
     # check user exists and authenticate
     user = auth_user(db, login_data.username, login_data.password)
@@ -52,6 +54,3 @@ def refresh_token(refresh_token: Annotated[str, Depends(get_cookie_auth)], db: d
     # new access token
     access_token = create_token(data={"sub": user.username}, token_type="access")
     return Token(access_token=access_token, token_type="bearer")
-
-
-
