@@ -12,7 +12,6 @@ from sqlalchemy.exc import IntegrityError
 from fastapi.responses import JSONResponse
 
 
-
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 

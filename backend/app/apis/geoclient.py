@@ -49,7 +49,7 @@ def convert_schedule(initials: str) -> list:
             continue
         converted_schedule.append(day_conversion[char])
     return converted_schedule
-        
+
 
 def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
     url = f"https://api.nyc.gov/geoclient/v2/search?input={input_addr}&returnPossiblesWithExact=true"
@@ -61,13 +61,12 @@ def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
         response = requests.get(url=url, headers=headers, timeout=15)
     except requests.exceptions.Timeout:
         return send_failed_response(504, "Geoclient API request timed out")
-        
     except requests.exceptions.ConnectionError:
         return send_failed_response(503, "Geoclient API connection error")
-
-    if response.status_code !=200:
+    except requests.exceptions.RequestException as e:
+        return send_failed_response(500, f"Error occurred when submitting request to Geoclient API: {str(e)}")
+    if response.status_code != 200:
         return send_failed_response(response.status_code,"Error Occurred when submitting to Geoclient API")
-    
     if response.json().get("status") == "REJECTED":
         return send_failed_response(400, "Invalid address input sent to Geoclient API, review and resubmit")
     # debug print statement
@@ -111,6 +110,7 @@ def test_user_address() -> GeoclientAPIResponse:
 
 def main():
     test_user_address()
+
 
 if __name__ == "__main__":
     main()
