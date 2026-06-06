@@ -18,3 +18,14 @@ class CollectionStatusResponse(BaseModel):
     error_code: int = None
     error_message: str = None
     data: list = []
+
+
+class AddressCollectionData(BaseModel):
+    """ Data to create collection for each address """
+    address_id: int
+    user_id: int
+
+
+class AllCollectionRequest(BaseModel):
+    """ Request to get all collections """
+    pass

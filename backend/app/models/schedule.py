@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import Integer
+from sqlalchemy import Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.dialects.postgresql import JSONB
@@ -15,4 +15,8 @@ class Schedule(Base):
     days_large_items: Mapped[list] = mapped_column(JSONB, default=[])
     collections: Mapped[List["Collection"]] = relationship(back_populates="schedule")
     addresses: Mapped[List["Address"]] = relationship(back_populates="schedule")
-    # add specifics for type of waste picking up
+    __table_args__ = (
+        UniqueConstraint("days_trash",
+                         "days_recycling",
+                         "days_compost",
+                         "days_large_items"),)
