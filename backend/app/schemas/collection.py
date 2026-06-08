@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
+from app.models.collection_type import WasteType, CollectionType
+from app.schemas.address import AddressResponse
 
 
 # for calls to 311 api, get collection status
@@ -20,12 +22,13 @@ class CollectionStatusResponse(BaseModel):
     data: list = []
 
 
-class AddressCollectionData(BaseModel):
-    """ Data to create collection for each address """
-    address_id: int
-    user_id: int
+class CollectionAddressResponse(AddressResponse):
+    """ info for address collection type"""
+    collection_types: list[WasteType] = []
 
 
-class AllCollectionRequest(BaseModel):
-    """ Request to get all collections """
-    pass
+class CollectionsAllRequest(BaseModel):
+    """ Store info for address with collections for next day"""
+    address_data: list[CollectionAddressResponse] = []
+
+

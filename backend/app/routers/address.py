@@ -29,7 +29,7 @@ def get_all_user_address(user: user_depend, db: db_depend):
     return addresses
 
 
-@router.post("/address")
+@router.post("/addresses")
 def set_address(address: AddressCreate, user: user_depend, db: db_depend) -> AddressResponse:
     """ Validate user address using geoclient api and create address and attach schedule"""
     response = get_sanitation_info(address.full_address)
@@ -68,7 +68,7 @@ def set_address(address: AddressCreate, user: user_depend, db: db_depend) -> Add
     return new_address
 
 
-@router.delete("/address/{address_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/addresses/{address_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user_address(db: db_depend, user: user_depend, address_id: int):
     """ Delete user requested address """
     address_exists = get_address_by_id(db=db, user_id=user.id, address_id=address_id)
@@ -80,7 +80,7 @@ def delete_user_address(db: db_depend, user: user_depend, address_id: int):
     return {f"{address_id} has been successfully deleted"}
 
 
-@router.patch("/address/{address_id}")
+@router.patch("/addresses/{address_id}")
 def update_user_address(
       db: db_depend,
       user: user_depend,
@@ -99,7 +99,7 @@ def update_user_address(
     return address
 
 
-@router.get("/address/{address_id}")
+@router.get("/addresses/{address_id}")
 def get_address(db: db_depend, user: user_depend, address_id: int) -> AddressResponse:
     address = get_address_by_id(db=db, user_id=user.id, address_id=address_id)
     if not address:
@@ -110,7 +110,7 @@ def get_address(db: db_depend, user: user_depend, address_id: int) -> AddressRes
     return address
 
 
-@router.get("/address/{address_id}/schedule")
+@router.get("/addresses/{address_id}/schedule")
 def get_schedule_for_address(db: db_depend, user: user_depend, address_id: int) -> ScheduleResponse:
     """ Get sanitation collection schedule for address"""
     address = get_address_by_id(db=db, user_id=user.id, address_id=address_id)

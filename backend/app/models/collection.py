@@ -13,6 +13,7 @@ class CollectionStatus(enum.Enum):
     on_schedule = "ON SCHEDULE"
     not_in_effect = "NOT IN EFFECT"
     suspended = "SUSPENDED"
+    unknown = "UNKNOWN"
 
 
 # junction table

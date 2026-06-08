@@ -3,7 +3,7 @@ from datetime import datetime
 from app.schemas.collection import CollectionStatusRequest, CollectionStatusResponse
 from app.apis.nyc_311 import get_collection_status
 
-router = APIRouter(prefix="/api/collection", tags=["collection"])
+router = APIRouter(prefix="/api/collections", tags=["collection"])
 
 
 @router.get("/status")

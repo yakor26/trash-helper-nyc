@@ -1,6 +1,6 @@
 from typing import List
 from app.models.collection import collections_collection_types
-from sqlalchemy import String, Integer, Enum
+from sqlalchemy import String, Integer, Enum, UniqueConstraint
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import relationship, mapped_column
 from app.database import Base
@@ -22,3 +22,4 @@ class CollectionType(Base):
     collections: Mapped[List["Collection"]] = relationship(
         back_populates="collection_types",
         secondary=collections_collection_types)
+    __table_args__ = (UniqueConstraint("waste_type"),)

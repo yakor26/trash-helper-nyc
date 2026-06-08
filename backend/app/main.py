@@ -15,6 +15,13 @@ from app.database import engine
 
 
 app = FastAPI(title="NYC Waste Helper")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    )
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(address_router)
