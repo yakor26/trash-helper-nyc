@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select, update
 from app.models.user import User
 from app.schemas.user import UserBase, UserCreate, UserUpdate
+from sqlalchemy.exc import IntegrityError
 
 
 def create_user(db: Session, user: UserCreate, hashed_password):
@@ -15,9 +16,12 @@ def create_user(db: Session, user: UserCreate, hashed_password):
         allow_notifications=user.allow_notifications,
         addresses=[],
     )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except IntegrityError:
+        db.rollback()
     return UserBase.model_validate(new_user)
 
 
@@ -43,6 +47,9 @@ def update_user(db: Session, user_id: int, user_update: UserUpdate) -> UserBase:
     if not user:
         return False
     update_fields = user_update.model_dump(exclude_none=True)
-    db.execute(update(User).where(User.id == user_id).values(**update_fields))
-    db.commit()
+    try:
+        db.execute(update(User).where(User.id == user_id).values(**update_fields))
+        db.commit()
+    except IntegrityError:
+        db.rollback()
     return get_user_by_id(db, user_id)
