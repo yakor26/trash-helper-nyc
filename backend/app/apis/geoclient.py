@@ -29,20 +29,18 @@ def convert_schedule(initials: str) -> list:
     if not initials:
         return []
 
-    initials_copy = list(initials.lower())
+    initials_copy = initials.lower()
     converted_schedule = []
     day_conversion = {
         "m": "monday",
         "t": "tuesday",
         "w": "wednesday",
-        "th": "thursday",
+        "h": "thursday",
         "f": "friday",
         "s": "saturday"
     }
     if "t" and "h" in initials_copy:
-        converted_schedule.append(day_conversion["th"])
-        initials_copy.remove("t")
-        initials_copy.remove("h")
+        initials_copy = initials.lower().replace("th", "h")
 
     for i, char in enumerate(initials_copy):
         if char == "e":
@@ -104,7 +102,8 @@ def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
 
 def test_user_address() -> GeoclientAPIResponse:
     """ Test input calls made to api"""
-    full_user_address = GeoclientAPIResponse(full_address=input("Enter Full Address: "))
+    # full_user_address = GeoclientAPIResponse(full_address=input("Enter Full Address: "))
+    full_user_address = input("Enter Full Address: ")
     return get_sanitation_info(full_user_address)
 
 
