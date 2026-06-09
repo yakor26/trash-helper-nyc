@@ -17,3 +17,4 @@ class User(Base):
     allow_notifications: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     addresses: Mapped[List["Address"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    notifications: Mapped[List["Notification"]] = relationship(back_populates="user", cascade="all, delete-orphan")

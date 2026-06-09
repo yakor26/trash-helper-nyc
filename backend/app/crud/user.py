@@ -33,19 +33,23 @@ def get_user_by_username(db: Session, username: str) -> UserBase:
     return UserBase.model_validate(user)
 
 
-def check_user_by_email(db: Session, email: str) -> bool:
-    """ Get user from db email"""
+def check_user_by_email(db: Session, email: str, curr_user_id: int = None) -> bool:
+    """ Return true/false if user email exists in db"""
     user = db.execute(select(User).where(User.email == email)).scalar_one_or_none()
     if not user:
-        return None
+        return False
+    if curr_user_id and user.id == curr_user_id:
+        return False
     return True
 
 
-def check_user_by_phone_num(db: Session, phone_num: str) -> bool:
+def check_user_by_phone_num(db: Session, phone_num: str, curr_user_id: int = None) -> bool:
     """ Get user from db email"""
     user = db.execute(select(User).where(User.phone_number == phone_num)).scalar_one_or_none()
     if not user:
-        return None
+        return False
+    if curr_user_id and user.id == curr_user_id:
+        return False
     return True
 
 
@@ -69,3 +73,4 @@ def update_user(db: Session, user_id: int, user_update: UserUpdate) -> UserBase:
     except IntegrityError:
         db.rollback()
     return get_user_by_id(db, user_id)
+
