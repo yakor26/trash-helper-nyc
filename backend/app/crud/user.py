@@ -33,6 +33,22 @@ def get_user_by_username(db: Session, username: str) -> UserBase:
     return UserBase.model_validate(user)
 
 
+def check_user_by_email(db: Session, email: str) -> bool:
+    """ Get user from db email"""
+    user = db.execute(select(User).where(User.email == email)).scalar_one_or_none()
+    if not user:
+        return None
+    return True
+
+
+def check_user_by_phone_num(db: Session, phone_num: str) -> bool:
+    """ Get user from db email"""
+    user = db.execute(select(User).where(User.phone_number == phone_num)).scalar_one_or_none()
+    if not user:
+        return None
+    return True
+
+
 def get_user_by_id(db: Session, user_id: int) -> UserBase:
     """ Get user information based on user id"""
     user = db.execute(select(User).where(User.id == user_id)).scalar_one_or_none()

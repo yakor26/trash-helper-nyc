@@ -5,7 +5,11 @@ from app.dependencies import user_depend, db_depend, get_cookie_auth
 from app.schemas.user import UserCreate, UserBase
 from app.auth.utils import get_user_by_username, set_tokens, oauth2_scheme, refresh_token_exceptions
 from app.auth.utils import get_hashed_password, decode_token, credentials_exceptions, auth_user, create_token
-from app.crud.user import get_user_by_username as crud_get_user, create_user
+from app.crud.user import (
+    get_user_by_username as crud_get_user,
+    create_user,
+    check_user_by_email,
+    check_user_by_phone_num)
 from app.models.user import User
 from app.schemas.token import Token
 from sqlalchemy.exc import IntegrityError
@@ -19,9 +23,16 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 def register_user(user: UserCreate, db: db_depend) -> JSONResponse:
     """ Register new user and provide tokens"""
     # confirm username not already exists
-    user_exists = crud_get_user(db, user.username)
-    if user_exists:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists")
+    username_exists = crud_get_user(db, user.username)
+    email_exists = check_user_by_email(db, user.email)
+    phone_num_exists = check_user_by_phone_num(db, user.phone_number)
+    if username_exists:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exists")
+    if phone_num_exists:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Phone Number already exists")
+    if email_exists:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email address already exists")
+
     hashed_password = get_hashed_password(user.password)
     user = create_user(db=db, user=user, hashed_password=hashed_password)
     return set_tokens(user.username)
