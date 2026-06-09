@@ -36,6 +36,7 @@ class Collection(Base):
     delay_reason: Mapped[str] = mapped_column(String(200), nullable=True)
     schedule: Mapped["Schedule"] = relationship(back_populates="collections")
     address: Mapped["Address"] = relationship(back_populates="collections")
+    notifications: Mapped[List["Notification"]] = relationship(back_populates="collection")
     collection_types: Mapped[List["CollectionType"]] = relationship(
         back_populates="collections",
         secondary=collections_collection_types)
