@@ -7,11 +7,16 @@ from app.routers.address import router as address_router
 from app.routers.notification import router as notification_router
 from contextlib import asynccontextmanager
 from app.database import engine
+from apscheduler.schedulers.background import BackgroundScheduler
+from app.crud.collection import create_collection_event
 
 # on startup
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(create_collection_event)
+
+    # Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(title="NYC Waste Helper")

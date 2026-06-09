@@ -14,7 +14,6 @@ def collection_status(specific_date: datetime = None) -> CollectionStatusRespons
             from_date=specific_date.strftime("%m/%d/%Y"),
             to_date=specific_date.strftime("%m/%d/%Y")
             )
-        print(date_request)
     else:
         date_request = CollectionStatusRequest()
     status_response = get_collection_status(date_request)

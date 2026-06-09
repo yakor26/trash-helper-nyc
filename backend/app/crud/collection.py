@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, update, delete, or_
+from sqlalchemy.exc import IntegrityError
 from app.models.user import User
 from app.models.collection import Collection, CollectionStatus, collections_collection_types
 from app.models.address import Address
@@ -12,13 +13,35 @@ from datetime import datetime, timedelta
 from app.database import SessionLocal
 
 
-def get_data_for_collection() -> list[CollectionAddressResponse]:
+def get_collection_status_api() -> tuple[CollectionStatus, CollectionStatusResponse]:
+    """" Get collection status from 311 API"""
+    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
+    tomorrow = datetime(2025, 7, 4).strftime("%m/%d/%Y")
+
+    collection_status = get_collection_status(CollectionStatusRequest(
+        from_date=tomorrow,
+        to_date=tomorrow
+    ))
+    # failed response set collection event as unknown
+    status_options = [status.value for status in CollectionStatus]
+    if (
+        collection_status.status == "failed"
+        or len(collection_status.data) == 0
+        or collection_status.data[0].get("status") not in status_options
+            ):
+        collection_status_value = CollectionStatus.unknown
+    else:
+        collection_status_value = CollectionStatus(collection_status.data[0].get("status"))
+    return collection_status_value, collection_status
+
+
+def get_address_data_for_collection() -> list[CollectionAddressResponse]:
     """ Get collection data needed to create collections"""
+    day_of_week = datetime(2025, 7, 4).strftime("%A").lower()
     # day_of_week = (datetime.today() + timedelta(days=1)).strftime("%A").lower()
-    # day_of_week = datetime(2026, 6, 3).strftime("%A").lower()
     set_collections = []
-    day_of_week = "wednesday"
-    print(day_of_week)
+    # day_of_week = "wednesday"
+    # print(day_of_week)
     db = SessionLocal()
     addresses = db.execute(select(Address).join(
         Schedule, Address.schedule_id == Schedule.id
@@ -43,26 +66,63 @@ def get_data_for_collection() -> list[CollectionAddressResponse]:
     return set_collections
 
 
+def update_collection_event():
+    """ Update collection events that were previously delayed, suspended"""
+    db = SessionLocal()
+    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
+    tomorrow = datetime(2025, 7, 4).strftime("%m/%d/%Y")
+    next_day = datetime(2025, 7, 5).strftime("%m/%d/%Y")
+    print(datetime.strptime(tomorrow, "%m/%d/%Y") - timedelta(days=7))
+    delayed_collections = db.execute(select(Collection).where(
+        Collection.status != CollectionStatus.on_schedule,
+        Collection.updated_collection_date == tomorrow,
+        Collection.collection_date > datetime.strptime(tomorrow, "%m/%d/%Y") - timedelta(days=7)
+    )).scalars().all()
+    collection_status_value, collection_status = get_collection_status_api()
+    # set on schedule if resumed sanitation collection
+    for collection in delayed_collections:
+        if collection_status_value == CollectionStatus.on_schedule:
+            db.execute(update(Collection).where(
+                Collection.id == collection.id).values(
+                    status=CollectionStatus.on_schedule
+                ))
+        else:
+            db.execute(update(Collection).where(
+                Collection.id == collection.id).values(
+                    status=collection_status_value,
+                    delay_reason=collection_status.data[0].get("details"),
+                    updated_collection_date=next_day
+                    ))
+
+
+
+    # if collection_status_value == CollectionStatus.on_schedule:
+    #     for collection in delayed_collections:
+    #         db.execute(update(Collection).where(
+    #             Collection.id == collection.id).values(
+    #                 status=CollectionStatus.on_schedule
+    #             ))
+    # else:
+    #     for collection in delayed_collections:
+    #         db.execute(update(Collection).where(
+    #             Collection.updated_collection_date == tomorrow).values(
+    #                 status=collection_status_value,
+    #                 delay_reason=collection_status.data[0].get("details")
+    #             ))
+    db.commit()
+    db.close()
+
+
 def create_collection_event():
     """ Create collection event for each user depending on address schedules"""
-    collection_data = get_data_for_collection()
+    collection_data = get_address_data_for_collection()
     # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
-    tomorrow = datetime(2026, 6, 3).strftime("%m/%d/%Y")
-    collection_status = get_collection_status(CollectionStatusRequest(
-        from_date=tomorrow,
-        to_date=tomorrow
-    ))
-    # failed response set collection event as unknown
-    status_options = [status.value for status in CollectionStatus]
-    if (
-        collection_status.status == "failed"
-        or len(collection_status.data) == 0
-        or collection_status.data[0].get("status") not in status_options
-            ):
-            collection_status_value = CollectionStatus.unknown
-    else:
-        collection_status_value = CollectionStatus(collection_status.data[0].get("status"))
-    # print(collection_status_value)
+    # next_day = (datetime.today() + timedelta(days=2)).strftime("%m/%d/%Y")
+    tomorrow = datetime(2025, 7, 4).strftime("%m/%d/%Y")
+    next_day = datetime(2025, 7, 5).strftime("%m/%d/%Y")
+    collection_status_value, collection_status = get_collection_status_api()
+    print(collection_status)
+    print(collection_status_value)
     db = SessionLocal()
     collection_types_query = db.execute(select(CollectionType)).scalars().all()
     map_collection_types = {
@@ -70,19 +130,33 @@ def create_collection_event():
     for type in collection_types_query:
         map_collection_types[type.waste_type] = type
     for collection in collection_data:
+        collection_exists_query = db.execute(
+            select(Collection).where(
+                collection.id == Collection.address_id,
+                or_(tomorrow == Collection.updated_collection_date,
+                    next_day == Collection.updated_collection_date),
+                )).scalar_one_or_none()
+        if collection_exists_query:
+            continue
+        on_schedule = collection_status_value == CollectionStatus.on_schedule
         collection_event = Collection(
             schedule_id=collection.schedule_id,
             address_id=collection.id,
             collection_date=tomorrow,
             status=collection_status_value,
-            collection_types=[map_collection_types[col_type] for col_type in collection.collection_types]
+            updated_collection_date=tomorrow if on_schedule else next_day,
+            collection_types=[map_collection_types[col_type] for col_type in collection.collection_types],
+            delay_reason=None if on_schedule else collection_status.data[0].get("details")
         )
-        db.add(collection_event)
-        db.commit()
-        db.refresh(collection_event)
-        db.close()
+        try:
+            db.add(collection_event)
+            db.commit()
+        except IntegrityError:
+            db.rollback()
         print(collection)
+    db.close()
 
 
 if __name__ == "__main__":
-    create_collection_event()
+    update_collection_event()
+    # create_collection_event()

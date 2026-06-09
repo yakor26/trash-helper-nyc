@@ -19,6 +19,7 @@ class CollectionType(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     waste_type: Mapped[WasteType] = mapped_column(Enum(WasteType), nullable=False)
     items: Mapped[List["Item"]] = relationship(back_populates="collection_type")
+    instructions: Mapped[str] = mapped_column(String(200), nullable=True)
     collections: Mapped[List["Collection"]] = relationship(
         back_populates="collection_types",
         secondary=collections_collection_types)
