@@ -9,6 +9,7 @@ from app.database import SessionLocal
 from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError
 from app.apis.text_notifications import send_text
+from sqlalchemy.orm import Session
 
 
 def create_notification_message(
@@ -28,7 +29,7 @@ def create_notification_message(
     if col_date != tomorrow and col_status == CollectionStatus.on_schedule:
         resumed_message = f"NYC Sanitation Helper: Sanitation pickup will resume for tomorrow {tomorrow}! Have collection set out by midnight."
         return resumed_message
-    greeting = f"NYC Sanitation Helper: Sanitation pickup for tomorrow {tomorrow.strftime('%m-%d-%Y')} is {col_status.value.lower()}. "
+    greeting = f"NYC Sanitation Helper: Sanitation pickup is {col_status.value.lower()} for tomorrow, {tomorrow.strftime('%m-%d-%Y')}. "
     if col_status == CollectionStatus.unknown:
         body = "There is currently no information about sanitation pickup."
     elif col_status == CollectionStatus.suspended:
@@ -38,6 +39,7 @@ def create_notification_message(
     else:
         body = f"Have {", ".join(waste_types)} out for pickup by midnight."
     return greeting + body
+
 
 
 def create_notifications():
@@ -58,8 +60,16 @@ def create_notifications():
             )
         ))).scalars().all()
     for collection in collections:
+        notification_exists = db.execute(
+            select(Notification).where(
+                Notification.collection_id == collection.id,
+                Notification.collection_status == collection.status
+            )).scalar_one_or_none()
+        if notification_exists:
+            continue
         new_notification = Notification(
             user_id=collection.address.user_id,
+            collection_status=collection.status,
             message=create_notification_message(
                 collection.collection_types,
                 collection.status,
