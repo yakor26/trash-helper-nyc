@@ -15,9 +15,7 @@ from app.database import SessionLocal
 
 def get_collection_status_api() -> tuple[CollectionStatus, CollectionStatusResponse]:
     """" Get collection status from 311 API"""
-    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
-    tomorrow = datetime(2025, 7, 9).strftime("%m/%d/%Y")
-
+    tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
     collection_status = get_collection_status(CollectionStatusRequest(
         from_date=tomorrow,
         to_date=tomorrow
@@ -37,11 +35,8 @@ def get_collection_status_api() -> tuple[CollectionStatus, CollectionStatusRespo
 
 def get_address_data_for_collection() -> list[CollectionAddressResponse]:
     """ Get collection data needed to create collections"""
-    day_of_week = datetime(2025, 7, 9).strftime("%A").lower()
-    # day_of_week = (datetime.today() + timedelta(days=1)).strftime("%A").lower()
+    day_of_week = (datetime.today() + timedelta(days=1)).strftime("%A").lower()
     set_collections = []
-    # day_of_week = "wednesday"
-    # print(day_of_week)
     db = SessionLocal()
     addresses = db.execute(select(Address).join(
         Schedule, Address.schedule_id == Schedule.id
@@ -69,10 +64,8 @@ def get_address_data_for_collection() -> list[CollectionAddressResponse]:
 def update_collection_event():
     """ Update collection events that were previously delayed, suspended"""
     db = SessionLocal()
-    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
-    tomorrow = datetime(2025, 7, 9).strftime("%m/%d/%Y")
-    next_day = datetime(2025, 7, 10).strftime("%m/%d/%Y")
-    print(datetime.strptime(tomorrow, "%m/%d/%Y") - timedelta(days=7))
+    tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
+    next_day = (datetime.today() + timedelta(days=2)).strftime("%m/%d/%Y")
     delayed_collections = db.execute(select(Collection).where(
         Collection.status != CollectionStatus.on_schedule,
         Collection.updated_collection_date == tomorrow
@@ -99,13 +92,9 @@ def update_collection_event():
 def create_collection_event():
     """ Create collection event for each user depending on address schedules"""
     collection_data = get_address_data_for_collection()
-    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
-    # next_day = (datetime.today() + timedelta(days=2)).strftime("%m/%d/%Y")
-    tomorrow = datetime(2025, 7, 9).strftime("%m/%d/%Y")
-    next_day = datetime(2025, 7, 10).strftime("%m/%d/%Y")
+    tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
+    next_day = (datetime.today() + timedelta(days=2)).strftime("%m/%d/%Y")
     collection_status_value, collection_status = get_collection_status_api()
-    print(collection_status)
-    print(collection_status_value)
     db = SessionLocal()
     collection_types_query = db.execute(select(CollectionType)).scalars().all()
     map_collection_types = {
@@ -136,19 +125,24 @@ def create_collection_event():
             db.commit()
         except IntegrityError:
             db.rollback()
-        print(collection)
     db.close()
 
 
 def delete_collection_event():
     """ Delete collection events older than 2 weeks"""
     db = SessionLocal()
-    print(datetime.today() - timedelta(days=14))
     db.execute(delete(Collection).where(
         Collection.collection_date < datetime.today() - timedelta(days=14)
             ))
     db.commit()
     db.close()
+
+
+def collection_job():
+    """ """
+    delete_collection_event()
+    update_collection_event()
+    create_collection_event()
 
 
 if __name__ == "__main__":

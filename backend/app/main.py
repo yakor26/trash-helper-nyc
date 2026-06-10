@@ -8,18 +8,22 @@ from app.routers.notification import router as notification_router
 from contextlib import asynccontextmanager
 from app.database import engine
 from apscheduler.schedulers.background import BackgroundScheduler
-from app.crud.collection import create_collection_event
+from app.crud.collection import collection_job
+from app.crud.notification import notification_job
+from datetime import datetime, timedelta
+
 
 # on startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(create_collection_event)
+    scheduler.add_job(collection_job, "cron", hour=4, next_run_time=datetime.now())
+    scheduler.add_job(notification_job, "cron", hour=8, next_run_time=datetime.now() + timedelta(minutes=3))
+    scheduler.start()
+    yield
+    scheduler.shutdown()
 
-    # Base.metadata.create_all(bind=engine)
-
-
-app = FastAPI(title="NYC Waste Helper")
+app = FastAPI(title="NYC Waste Helper", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
