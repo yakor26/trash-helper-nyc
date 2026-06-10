@@ -56,7 +56,7 @@ def set_address(address: AddressCreate, user: user_depend, db: db_depend) -> Add
     )
     if address_exists:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="This address already exists")
+                            detail="This address already is already saved")
     # create address if not
     new_address = create_address(
         db=db,

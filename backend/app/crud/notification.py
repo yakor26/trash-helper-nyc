@@ -1,1 +1,96 @@
 from app.models.notification import Notification
+from app.schemas.notification import NotificationRequest, NotificationResponse
+from app.models.collection import Collection, CollectionStatus
+from app.models.collection_type import CollectionType
+from app.models.address import Address
+from app.models.user import User
+from sqlalchemy import select, update, delete, or_, and_
+from app.database import SessionLocal
+from datetime import datetime, timedelta
+from sqlalchemy.exc import IntegrityError
+
+
+def create_notification_message(
+        col_types: list[CollectionType],
+        col_status: CollectionStatus,
+        col_date,
+        reason: str = None
+        ) -> str:
+    """ Create notification message with collection status,
+    collection types, and instruction"""
+    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
+    tomorrow = datetime(2025, 7, 9).date()
+    waste_types = [col.waste_type.value for col in col_types]
+    # back on schedule if collection date does not match tomorrow
+    if col_date == tomorrow and col_status == CollectionStatus.on_schedule:
+        resumed_message = f"NYC Sanitation Helper: Sanitation pickup will resume for tomorrow {tomorrow}! Have collection set out by midnight."
+        return resumed_message
+    greeting = f"NYC Sanitation Helper: Sanitation pickup for tomorrow {tomorrow} is {col_status.value} "
+    if col_status == CollectionStatus.unknown:
+        body = "There is currently no information about sanitation pickup."
+    elif col_status == CollectionStatus.suspended:
+        body = f"due to {reason}, there will be no pickup, do not put any collection out."
+    elif col_status == CollectionStatus.delayed:
+        body = f"due to {reason}, put out all trash types."
+    else:
+        body = f"Have {", ".join(waste_types)} out for pickup by midnight."
+    print(greeting + body)
+    return greeting + body
+
+
+def create_notifications():
+    """ Create notification entries to be sent out to user"""
+    # tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
+    tomorrow = datetime(2025, 7, 9).strftime("%m/%d/%Y")
+    db = SessionLocal()
+    collections = db.execute(select(Collection).join(
+        Address, Collection.address_id == Address.id
+    ).join(
+        User, Address.user_id == User.id
+    ).where(
+        User.allow_notifications,
+        or_(
+            Collection.collection_date == tomorrow,
+            and_(
+                Collection.updated_collection_date == tomorrow,
+                Collection.status == CollectionStatus.on_schedule
+            )
+        ))).scalars().all()
+    for collection in collections:
+        new_notification = Notification(
+            user_id=collection.address.user_id,
+            message=create_notification_message(
+                collection.collection_types,
+                collection.status,
+                collection.collection_date,
+                collection.delay_reason,
+            ),
+            collection_id=collection.id
+        )
+        print(new_notification.message)
+        try:
+            db.add(new_notification)
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+    db.close()
+
+
+def send_notifications():
+    db = SessionLocal()
+    db.close()
+
+
+def delete_notifications():
+    """ Delete notifications older than 2 weeks"""
+    db = SessionLocal()
+    db.execute(delete(Notification).where(
+            Notification.sent_at < datetime.today() - timedelta(days=14)
+        )
+    )
+    db.commit()
+    db.close()
+
+
+if __name__ == "__main__":
+    create_notifications()

@@ -18,8 +18,8 @@ def get_user(user: user_depend, db: db_depend) -> UserBase:
 @router.patch("")
 def update_user_profile(db: db_depend, user: user_depend, update: UserUpdate) -> UserBase:
     """ Update user profile, cannot change username """
-    email_exists = check_user_by_email(db, user.email)
-    phone_num_exists = check_user_by_phone_num(db, user.phone_number)
+    email_exists = check_user_by_email(db, update.email, user.id)
+    phone_num_exists = check_user_by_phone_num(db, update.phone_number, user.id)
     if phone_num_exists:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cannot Update: Phone Number already registered for another account")
     if email_exists:

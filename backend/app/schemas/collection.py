@@ -30,5 +30,3 @@ class CollectionAddressResponse(AddressResponse):
 class CollectionsAllRequest(BaseModel):
     """ Store info for address with collections for next day"""
     address_data: list[CollectionAddressResponse] = []
-
-
