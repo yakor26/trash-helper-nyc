@@ -12,14 +12,15 @@ class WasteType(enum.Enum):
     recycling = "recycling"
     compost = "compost"
     large_items = "large_items"
+    special = "special"
 
 
 class CollectionType(Base):
     __tablename__ = "collection_types"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     waste_type: Mapped[WasteType] = mapped_column(Enum(WasteType), nullable=False)
-    items: Mapped[List["Item"]] = relationship(back_populates="collection_type")
     instructions: Mapped[str] = mapped_column(String(200), nullable=True)
+    item_categories: Mapped[List["ItemCategory"]] = relationship(back_populates="collection_type")
     collections: Mapped[List["Collection"]] = relationship(
         back_populates="collection_types",
         secondary=collections_collection_types)

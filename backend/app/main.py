@@ -17,8 +17,8 @@ from datetime import datetime, timedelta
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(collection_job, "cron", hour=4, next_run_time=datetime.now())
-    scheduler.add_job(notification_job, "cron", hour=8, next_run_time=datetime.now() + timedelta(minutes=3))
+    scheduler.add_job(collection_job, "cron", hour=16, next_run_time=datetime.now())
+    scheduler.add_job(notification_job, "cron", hour=18, next_run_time=datetime.now() + timedelta(minutes=3))
     scheduler.start()
     yield
     scheduler.shutdown()
