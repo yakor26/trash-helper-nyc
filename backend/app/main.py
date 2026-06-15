@@ -5,6 +5,7 @@ from app.routers.collection import router as collection_router
 from app.routers.auth import router as auth_router
 from app.routers.address import router as address_router
 from app.routers.notification import router as notification_router
+from app.routers.item_categories import router as categories_router
 from contextlib import asynccontextmanager
 from app.database import engine
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -36,3 +37,4 @@ app.include_router(user_router)
 app.include_router(address_router)
 app.include_router(collection_router)
 app.include_router(notification_router)
+app.include_router(categories_router)

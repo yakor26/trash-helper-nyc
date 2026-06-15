@@ -41,7 +41,6 @@ def create_notification_message(
     return greeting + body
 
 
-
 def create_notifications():
     """ Create notification entries to be sent out to user"""
     tomorrow = (datetime.today() + timedelta(days=1)).strftime("%m/%d/%Y")
@@ -117,6 +116,8 @@ def delete_notifications():
     db.commit()
     db.close()
 
+def get_all_notifications():
+    pass
 
 def notification_job():
     """"""
