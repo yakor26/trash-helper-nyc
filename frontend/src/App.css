@@ -161,7 +161,7 @@
   }
 }
 
-.ticks {
+/* .ticks {
   position: relative;
   width: 100%;
 
@@ -181,4 +181,4 @@
     right: 0;
     border-right-color: var(--border);
   }
-}
+} */
