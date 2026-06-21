@@ -27,15 +27,15 @@ def create_notification_message(
         waste_types.append("large items")
     # back on schedule if collection date does not match tomorrow
     if col_date != tomorrow and col_status == CollectionStatus.on_schedule:
-        resumed_message = f"NYC Sanitation Helper: Sanitation pickup will resume for tomorrow {tomorrow}! Have collection set out by midnight."
+        resumed_message = f"NYC Sanitation Helper Reminder: Sanitation pickup will resume for tomorrow {tomorrow}! Have collection set out by midnight. "
         return resumed_message
     greeting = f"NYC Sanitation Helper: Sanitation pickup is {col_status.value.lower()} for tomorrow, {tomorrow.strftime('%m-%d-%Y')}. "
     if col_status == CollectionStatus.unknown:
         body = "There is currently no information about sanitation pickup."
     elif col_status == CollectionStatus.suspended:
-        body = f"due to {reason}, there will be no pickup, do not put any collection out."
+        body = f"{reason} There will be no pickup, do not put any collection out."
     elif col_status == CollectionStatus.delayed:
-        body = f"due to {reason}, put out all trash types."
+        body = f"{reason} Put out all trash types."
     else:
         body = f"Have {", ".join(waste_types)} out for pickup by midnight."
     return greeting + body

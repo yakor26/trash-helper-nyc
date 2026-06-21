@@ -25,12 +25,12 @@ def assign_ranking_score(rank) -> float:
 
 def get_combined_scores(k_results, v_results) -> dict:
     """ Format total ranking for results from both searches """
-    if not k_results and v_results:
+    if not k_results and not v_results:
         return {}
     if not k_results:
-        return v_results
+        return {k: v for k, v in sorted(v_results.items(), key=lambda x: x[1], reverse=True)}
     if not v_results:
-        return k_results
+        return {k: v for k, v in sorted(k_results.items(), key=lambda x: x[1], reverse=True)}
     combo = k_results
     for k, v in v_results.items():
         if k in combo:
@@ -50,7 +50,6 @@ def keyword_search(search: ItemCategorySearch) -> dict:
                 search_entry))).scalars().all()
     result_list = [ItemCategoryResult.model_validate(cat) for cat in result]
     keyword_scores = {c.category_name: assign_ranking_score(i) for i, c in enumerate(result_list)}
-    db.close()
     return keyword_scores
 
 
@@ -91,6 +90,7 @@ def combined_search(search: ItemCategorySearch) -> SearchResult:
             )
     data = ItemCategoryResult.model_validate(highest_rank_category)
     data.col_type = highest_rank_category.collection_type.waste_type.value
+    db.close()
     return SearchResult(
         results_count=1,
         data=[data]
@@ -98,7 +98,7 @@ def combined_search(search: ItemCategorySearch) -> SearchResult:
 
 
 def main():
-    print(combined_search(ItemCategorySearch(search_value="ne")))
+    print(combined_search(ItemCategorySearch(search_value="perfume")))
 
 
 if __name__ == "__main__":
