@@ -30,7 +30,7 @@ const theme = extendTheme({
         }
     },
     fonts: {
-        heading: `'Poppins', sans-serif`,
+        heading: `'Outfit', sans-serif`,
         body: `'Open Sans', sans-serif`
     }
 })

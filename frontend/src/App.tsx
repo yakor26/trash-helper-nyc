@@ -1,18 +1,17 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-// import './App.css'
 import Navbar from './components/Navbar'
+import MainSection from './components/MainSection'
+import ScheduleSidebar from './components/ScheduleSidebar'
+import StatusSidebar from './components/StatusSidebar'
 import { Outlet } from 'react-router'
+import { Box } from "@chakra-ui/react"
 
 
 function App() {
   return (
     <>
     <Navbar/>
-    <h1>Temporary Home</h1>
-    <Outlet/>
+    <Outlet/> 
     </>
   )
 }

@@ -3,7 +3,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router"
 import '@fontsource-variable/open-sans/wght.css'
-import '@fontsource/poppins';
+import '@fontsource-variable/outfit/wght.css'
 import App from './App.tsx'
 import SearchPage from "./pages/SearchPage.tsx"
 import SearchResultsPage from "./pages/SearchResultsPage.tsx"

@@ -10,14 +10,14 @@ export default function Navbar() {
 
                 <HStack spacing="1">
                     <Box border="1" borderColor="gray.200" bg="whiteAlpha.400" boxShadow="xl" px={3} py={2} borderRadius="full">
-                        <Icon as={FaRecycle} boxSize={9} color="brand.white.100" />
+                        <Icon as={FaRecycle} boxSize={7} color="brand.white.100" />
                     </Box>
                     <ChakraLink as={ReactRouterLink} to="/" _hover={{ textDecoration: "none" }}>
                         <Heading size="lg">Trash Guide NYC</Heading>
                     </ChakraLink>
                 </HStack>
 
-                <HStack spacing={10}>
+                <HStack spacing={3}>
                     <ChakraLink as={ReactRouterLink} to="/schedule" fontSize="2xl" px={7} py={1} _hover={{ bg: "whiteAlpha.400", textDecoration: "none" }}>
                         Schedule
                     </ChakraLink>
