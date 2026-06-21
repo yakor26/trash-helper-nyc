@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field, ConfigDict
-from app.models.collection_type import CollectionType
 
 
 class ItemCategorySearch(BaseModel):
@@ -7,8 +6,9 @@ class ItemCategorySearch(BaseModel):
 
 
 class ItemCategoryResult(BaseModel):
+    id: int
     category_name: str
-    # collection_type: str = CollectionType
+    col_type: str = ""
     disposal_instructions: str
     accept_special_waste_site: bool
     accept_safe_disposal_site: bool
@@ -18,6 +18,5 @@ class ItemCategoryResult(BaseModel):
 
 class SearchResult(BaseModel):
     results_count: int = 0
-    data: list[ItemCategoryResult]
-    error_code: int = None
+    data: list[ItemCategoryResult] = None
     error_message: str = None
