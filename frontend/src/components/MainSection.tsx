@@ -11,7 +11,7 @@ export default function MainSection({ children }: MainSectionProps ) {
             borderWidth={"thin"} 
             borderColor={"gray.500"} 
             borderStyle={"solid"} 
-            borderRadius={"lg"} 
+            borderRadius={"3xl"} 
             boxShadow={"2xl"}
             width={"3xl"}
             p={10}

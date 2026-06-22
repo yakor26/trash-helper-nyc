@@ -6,7 +6,7 @@ export default function StatusSidebar() {
             borderWidth={"thin"} 
             borderColor={"gray.500"} 
             borderStyle={"solid"} 
-            borderRadius={"lg"} 
+            borderRadius={"3xl"} 
             boxShadow={"2xl"}
             maxWidth={"2xl"}
             p={"10"}>
