@@ -11,10 +11,14 @@ export default function BasicLayout({ children }: LayoutProps) {
     return (
         <>
         <Flex gap={"6"} mx={"auto"} my={"8"} maxW={"container.xl"}>
-            <Box w={"lg"}>
+            {/* <Box w={"lg"}>
                 <ScheduleSidebar/>
                 <StatusSidebar/>
-            </Box>
+            </Box> */}
+            <VStack maxW={"container.xl"} spacing={"4"} align={"stretch"}>
+                <ScheduleSidebar/>
+                <StatusSidebar/>
+            </VStack>
         
         <MainSection>
             {children}
@@ -22,6 +26,5 @@ export default function BasicLayout({ children }: LayoutProps) {
         
         </Flex>
         </>
-
     )
 }
