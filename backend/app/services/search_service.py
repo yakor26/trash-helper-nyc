@@ -15,6 +15,7 @@ descriptions = [cat.description for cat in descriptions_query]
 category_names = [cat.category_name for cat in descriptions_query]
 embedder = SentenceTransformer("nomic-ai/nomic-embed-text-v1.5")
 descriptions_embedded = embedder.encode_document(descriptions, convert_to_tensor=True)
+db.close()
 
 
 def assign_ranking_score(rank) -> float:
@@ -43,6 +44,7 @@ def get_combined_scores(k_results, v_results) -> dict:
 
 def keyword_search(search: ItemCategorySearch) -> dict:
     """ Keyword search matching against description in db for categories"""
+    db = SessionLocal()
     search_entry = spell_correct(search.search_value)
     result = db.execute(
         select(ItemCategory).where(
@@ -50,6 +52,7 @@ def keyword_search(search: ItemCategorySearch) -> dict:
                 search_entry))).scalars().all()
     result_list = [ItemCategoryResult.model_validate(cat) for cat in result]
     keyword_scores = {c.category_name: assign_ranking_score(i) for i, c in enumerate(result_list)}
+    db.close()
     return keyword_scores
 
 
@@ -67,6 +70,7 @@ def vector_search(search: ItemCategorySearch) -> dict:
 
 
 def combined_search(search: ItemCategorySearch) -> SearchResult:
+    db = SessionLocal()
     """ Merge results from keyword search and semantic search.
     Rank using RRF and return highest ranked score
     """

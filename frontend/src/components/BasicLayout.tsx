@@ -10,11 +10,7 @@ interface LayoutProps {
 export default function BasicLayout({ children }: LayoutProps) {
     return (
         <>
-        <Flex gap={"6"} mx={"auto"} my={"8"} maxW={"container.xl"}>
-            {/* <Box w={"lg"}>
-                <ScheduleSidebar/>
-                <StatusSidebar/>
-            </Box> */}
+        <Flex gap={6} mx={"auto"} my={"8"} maxW={"container.xl"}>
             <VStack maxW={"container.xl"} spacing={"4"} align={"stretch"}>
                 <ScheduleSidebar/>
                 <StatusSidebar/>

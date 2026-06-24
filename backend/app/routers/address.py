@@ -22,10 +22,6 @@ router = APIRouter(prefix="/api/user", tags=["address"])
 def get_all_user_address(user: user_depend, db: db_depend):
     """ Get all current user addresses"""
     addresses = get_all_addresses(db=db, user_id=user.id)
-    if not addresses:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No addresses added yet")
     return addresses
 
 
@@ -35,7 +31,6 @@ def set_address(address: AddressCreate, user: user_depend, db: db_depend) -> Add
     response = get_sanitation_info(address.full_address)
     if response.status == "failed":
         raise HTTPException(status_code=response.error_code, detail=response.error_message)
-    # print(response.data.get("sanitation"))
     # check schedule exists
     schedule = get_schedule_by_day(
         db=db,

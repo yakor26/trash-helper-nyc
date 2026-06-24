@@ -6,20 +6,17 @@ interface MainSectionProps {
 }
 export default function MainSection({ children }: MainSectionProps ) {
     return (
-    <>
     <Box bg={"brand.white.100"} 
             borderWidth={"thin"} 
             borderColor={"gray.500"} 
             borderStyle={"solid"} 
             borderRadius={"3xl"} 
             boxShadow={"2xl"}
-            width={"3xl"}
+            width={"full"}
             p={10}
             >
 
-    <Text>Main Section placeholder</Text>
     {children}
     </Box>
-    </>
     )
 }
