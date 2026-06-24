@@ -12,8 +12,8 @@ export default function MainSection({ children }: MainSectionProps ) {
             borderStyle={"solid"} 
             borderRadius={"3xl"} 
             boxShadow={"2xl"}
-            width={"full"}
-            p={10}
+            width={"container.xl"}
+            p={20}
             >
 
     {children}

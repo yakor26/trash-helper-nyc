@@ -93,7 +93,7 @@ def combined_search(search: ItemCategorySearch) -> SearchResult:
             error_message="Unable to find proper disposal instructions for this item"
             )
     data = ItemCategoryResult.model_validate(highest_rank_category)
-    data.col_type = highest_rank_category.collection_type.waste_type.value
+    data.col_type = highest_rank_category.collection_type.waste_type.value.title()
     db.close()
     return SearchResult(
         results_count=1,

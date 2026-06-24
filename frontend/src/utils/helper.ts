@@ -1,6 +1,7 @@
 
 export interface Category {
     id: number
+    col_type: string
     category_name: string
     disposal_instructions: string
     accept_special_waste_site: boolean
