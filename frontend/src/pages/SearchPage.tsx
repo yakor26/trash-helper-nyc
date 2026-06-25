@@ -15,7 +15,8 @@ import {
     Grid,
     HStack,
     IconButton,
-    Spinner
+    Spinner,
+    Center
 } from "@chakra-ui/react"
 import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5"
@@ -101,7 +102,7 @@ export default function SearchPage() {
                     />
             </HStack>
 
-        {searchQuery && isLoading && <Spinner/>}
+        {searchQuery && isLoading && <Center><Spinner size={"lg"} /></Center>}
 
         {searchQuery && !isLoading && isSearchDone &&
             <SearchResult data={result}/>
