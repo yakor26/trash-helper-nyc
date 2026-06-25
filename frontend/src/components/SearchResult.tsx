@@ -1,16 +1,16 @@
-import { Box, Card, CardHeader, CardBody, CardFooter, Text, Heading, HStack } from '@chakra-ui/react'
+import { Box, Card, CardHeader, CardBody, Text, Heading, HStack } from '@chakra-ui/react'
 import { FaRecycle, FaRegTrashAlt, FaLeaf, FaCouch } from 'react-icons/fa'
 import { IoIosWarning } from "react-icons/io";
 import type { ResultProps } from '../utils/helper'
 
-export default function SearchResult( { data }: ResultProps) {
-    const categoryStyle = [
+const categoryStyle = [
         {icon: <FaRegTrashAlt/>, label: "Trash", bgColor:"gray.300", color: "gray.900"},
         {icon: <FaRecycle/>, label: "Recycling", bgColor: "green.200", color: "white"},
         {icon: <FaLeaf/>, label: "Compost", bgColor: "yellow.900", color: "white"},
         {icon: <FaCouch/>, label: "Large Items", bgColor: "blue.300", color: "blue.900"},
         {icon: <IoIosWarning/>, label: "Special", bgColor: "orange.300", color: "orange.900"}
     ]
+export default function SearchResult( { data }: ResultProps) {
     return (
         <Box>
         {data.length === 0 ?

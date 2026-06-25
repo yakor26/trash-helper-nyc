@@ -1,4 +1,4 @@
-import { useSearchParams, Navigate } from "react-router"
+import { useSearchParams } from "react-router"
 import { useEffect, useState } from "react"
 import BasicLayout from "../components/BasicLayout"
 import ExampleItems from "../components/ExampleItems"
@@ -8,16 +8,12 @@ import api from "../utils/api"
 import {
     Box,
     Heading,
-    Stack, 
-    Input, 
-    InputGroup, 
-    InputRightElement, 
-    Icon, 
-    Button, 
-    Grid, 
-    GridItem,
+    Stack,
+    Input,
+    InputGroup,
+    InputRightElement,
+    Grid,
     HStack,
-    InputRightAddon,
     IconButton,
     Spinner
 } from "@chakra-ui/react"
@@ -31,12 +27,13 @@ export default function SearchPage() {
     const [isSearchDone, setIsSearchDone] = useState<boolean>(false)
     const [searchParams, setSearchParams] = useSearchParams()
 
-        useEffect(() => {
+    useEffect(() => {
         // for /search with no parameters reset
         if (!searchParams.get("query")) {
             setSearchQuery("")
             setIsSearchDone(false)
-    }},[searchParams])
+        }
+    }, [searchParams])
     
     const handleSearchQuery = async (value: string = searchQuery) => {
         try {
