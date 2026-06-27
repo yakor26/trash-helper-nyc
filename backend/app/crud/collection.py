@@ -131,10 +131,13 @@ def create_collection_event():
 def delete_collection_event():
     """ Delete collection events older than 2 weeks"""
     db = SessionLocal()
-    db.execute(delete(Collection).where(
-        Collection.collection_date < datetime.today() - timedelta(days=14)
-            ))
-    db.commit()
+    try:
+        db.execute(delete(Collection).where(
+            Collection.collection_date < datetime.today() - timedelta(days=14)
+                ))
+        db.commit()
+    except IntegrityError:
+        db.rollback()
     db.close()
 
 

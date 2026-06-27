@@ -20,7 +20,7 @@ class CollectionStatus(enum.Enum):
 collections_collection_types = Table(
     "collections_collection_types",
     Base.metadata,
-    Column("collection_id", ForeignKey("collections.id"), primary_key=True),
+    Column("collection_id", ForeignKey("collections.id", ondelete="CASCADE"), primary_key=True),
     Column("collection_type_id", ForeignKey("collection_types.id"), primary_key=True)
     )
 
@@ -39,5 +39,6 @@ class Collection(Base):
     notifications: Mapped[List["Notification"]] = relationship(back_populates="collection")
     collection_types: Mapped[List["CollectionType"]] = relationship(
         back_populates="collections",
-        secondary=collections_collection_types)
+        secondary=collections_collection_types
+        )
     __table_args__ = (UniqueConstraint("address_id", "updated_collection_date"),)
