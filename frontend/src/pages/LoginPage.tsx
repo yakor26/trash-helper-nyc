@@ -19,7 +19,7 @@ import { FaLock } from "react-icons/fa";
 import { Link as ReactLink, useNavigate } from "react-router";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import api from "../utils/api";
+// import api from "../utils/api";
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
