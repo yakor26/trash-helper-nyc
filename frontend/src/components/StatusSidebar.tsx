@@ -1,4 +1,4 @@
-import { Box, Text, Heading, VStack, IconButton, HStack, Icon } from "@chakra-ui/react";
+import { Box, Text, Heading, VStack, IconButton, HStack } from "@chakra-ui/react";
 import { IoIosRefresh} from "react-icons/io";
 import { PiProhibit } from "react-icons/pi";
 import { FiAlertTriangle } from "react-icons/fi";
