@@ -26,7 +26,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="NYC Waste Helper", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://trash-helper-nyc-git-main-abisolakorede-7469s-projects.vercel.app"
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
