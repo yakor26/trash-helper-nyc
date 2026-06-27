@@ -1,7 +1,7 @@
-import { Box, Card, CardHeader, CardBody, Text, Heading, HStack } from '@chakra-ui/react'
-import { FaRecycle, FaRegTrashAlt, FaLeaf, FaCouch } from 'react-icons/fa'
+import { Box, Card, CardHeader, CardBody, Text, Heading, HStack } from '@chakra-ui/react';
+import { FaRecycle, FaRegTrashAlt, FaLeaf, FaCouch } from 'react-icons/fa';
 import { IoIosWarning } from "react-icons/io";
-import type { ResultProps } from '../utils/helper'
+import type { ResultProps } from '../utils/helper';
 
 const categoryStyle = [
         {icon: <FaRegTrashAlt/>, label: "Trash", bgColor:"gray.300", color: "gray.900"},

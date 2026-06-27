@@ -10,18 +10,18 @@ import '@fontsource-variable/vazirmatn/wght.css';
 import api from "../utils/api";
 
 export default function StatusSidebar() {
-    const [status, setStatus] = useState("")
-    const [updatedTime, setUpdatedTime] = useState("")
-    const [todayDate, setTodayDate] = useState("")
+    const [status, setStatus] = useState("");
+    const [updatedTime, setUpdatedTime] = useState("");
+    const [todayDate, setTodayDate] = useState("");
     
     const getCollectionStatus = async () => {
         try {
             const res = await api.get("/api/collections/status");
-            setStatus(res.data.data[0].status)
-            setTodayDate(new Date().toDateString())
-            setUpdatedTime(new Date().toLocaleTimeString())
+            setStatus(res.data.data[0].status);
+            setTodayDate(new Date().toDateString());
+            setUpdatedTime(new Date().toLocaleTimeString());
         } catch(error) {
-            console.log("Error fetching collection status", error)
+            console.log("Error fetching collection status", error);
         }
     };
     useEffect(() => {
@@ -34,8 +34,8 @@ export default function StatusSidebar() {
         {status: "NOT IN EFFECT", color: "blue.600", message: "Not in Effect", icon: <PiProhibit />},
         {status: "SUSPENDED", color: "orange.600", message: "Suspended", icon: <FiAlertTriangle />},
         {status: "UNKNOWN", color: "gray.600", message: "Unknown", icon: <FaQuestionCircle />}
-    ]
-    const currentStatus = statusColors.find(ColStatus => ColStatus.status == status)
+    ];
+    const currentStatus = statusColors.find(ColStatus => ColStatus.status == status);
     const wasteTypes = [
         {icon: <FaRegTrashAlt/>, label: "Trash"},
         {icon: <FaRecycle/>, label: "Recycling"},

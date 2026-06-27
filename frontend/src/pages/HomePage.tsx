@@ -10,15 +10,15 @@ import {
     Heading, 
     Container, 
     Center, 
-} from "@chakra-ui/react"
-import { FaBell, FaSearch, FaCalendar } from "react-icons/fa"
-import { Link as ReactLink } from "react-router"
+} from "@chakra-ui/react";
+import { FaBell, FaSearch, FaCalendar } from "react-icons/fa";
+import { Link as ReactLink } from "react-router";
 
 const featureCards = [
     {icon: FaSearch, label: "Search for Items"},
     {icon: FaBell, label: "Get Text Reminders"},
     {icon: FaCalendar, label: "Check NYC Collection Status"},
-]
+];
 
 export default function HomePage() {
     return  (

@@ -1,7 +1,7 @@
-import { Box, HStack, Flex, Heading, Icon } from "@chakra-ui/react"
-import { Link as ChakraLink } from "@chakra-ui/react"
-import { Link as ReactRouterLink } from "react-router"
-import { FaRecycle } from "react-icons/fa"
+import { Box, HStack, Flex, Heading, Icon } from "@chakra-ui/react";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as ReactRouterLink } from "react-router";
+import { FaRecycle } from "react-icons/fa";
 
 export default function Navbar() {
     return (

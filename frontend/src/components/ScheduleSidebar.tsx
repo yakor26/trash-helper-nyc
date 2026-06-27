@@ -1,6 +1,6 @@
-import { Box, Text, Heading, Button, ButtonGroup, HStack, Icon, VStack } from "@chakra-ui/react"
-import { FaBell } from "react-icons/fa"
-import { Link as ReactRouterLink } from "react-router"
+import { Box, Text, Heading, Button, ButtonGroup, Icon, VStack } from "@chakra-ui/react";
+import { FaBell } from "react-icons/fa";
+import { Link as ReactRouterLink } from "react-router";
 
 export default function ScheduleSidebar() {
     return (

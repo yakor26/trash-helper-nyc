@@ -1,15 +1,15 @@
-import { GridItem, Button } from "@chakra-ui/react"
-import { IoAddCircleOutline } from "react-icons/io5"
+import { GridItem, Button } from "@chakra-ui/react";
+import { IoAddCircleOutline } from "react-icons/io5";
 
 interface ExampleSearchProps {
     onSearchClick: (search: string) => void
     onSearchSubmit: (search: string) => void
-}
+};
 export default function ExampleItems({ onSearchClick, onSearchSubmit }: ExampleSearchProps) {
     const exampleSearch = async (search: string) => {
         onSearchClick(search)
         onSearchSubmit(search)
-    }
+    };
     const exampleItems = [
         {item: "Old Couch"},
         {item: "AA Battery"},
@@ -17,7 +17,7 @@ export default function ExampleItems({ onSearchClick, onSearchSubmit }: ExampleS
         {item: "Indoor Fan"},
         {item: "Pizza Box"},
         {item: "Glass Jar"},
-    ]
+    ];
 
     return (
         <>

@@ -1,8 +1,8 @@
-import MainSection from "../components/MainSection"
-import ScheduleSidebar from "../components/ScheduleSidebar"
-import StatusSidebar from "../components/StatusSidebar"
-import type { ReactNode } from "react"
-import { HStack, VStack, Box, Flex } from "@chakra-ui/react"
+import MainSection from "../components/MainSection";
+import ScheduleSidebar from "../components/ScheduleSidebar";
+import StatusSidebar from "../components/StatusSidebar";
+import type { ReactNode } from "react";
+import { VStack, Flex } from "@chakra-ui/react";
 
 interface LayoutProps {
     children: ReactNode

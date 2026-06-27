@@ -55,7 +55,7 @@ export default function LoginPage() {
                     Sign into your account
                 </Heading>
             </VStack>
-        {loginError && <Alert status="error"><AlertIcon/>{loginError}</Alert>}
+        {loginError && <Alert status="error" width={"md"}><AlertIcon/>{loginError}</Alert>}
         <Box 
             bg={"brand.white.100"} 
             p={12} 

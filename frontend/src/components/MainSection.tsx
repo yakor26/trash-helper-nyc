@@ -1,8 +1,8 @@
-import { Box, Text } from "@chakra-ui/react"
-import type { ReactNode } from "react"
+import { Box } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 interface MainSectionProps {
-    children: ReactNode
+    children: ReactNode;
 }
 export default function MainSection({ children }: MainSectionProps ) {
     return (

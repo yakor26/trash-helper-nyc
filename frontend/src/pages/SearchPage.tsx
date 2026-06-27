@@ -1,10 +1,10 @@
-import { useSearchParams } from "react-router"
-import { useEffect, useState } from "react"
-import BasicLayout from "../components/BasicLayout"
-import ExampleItems from "../components/ExampleItems"
-import SearchResult from "../components/SearchResult"
-import type { Category } from "../utils/helper"
-import api from "../utils/api"
+import { useSearchParams } from "react-router";
+import { useEffect, useState } from "react";
+import BasicLayout from "../components/BasicLayout";
+import ExampleItems from "../components/ExampleItems";
+import SearchResult from "../components/SearchResult";
+import type { Category } from "../utils/helper";
+import api from "../utils/api";
 import {
     Box,
     Heading,
@@ -17,16 +17,16 @@ import {
     IconButton,
     Spinner,
     Center
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
-import { IoClose } from "react-icons/io5"
+import { IoClose } from "react-icons/io5";
 
 export default function SearchPage() {
-    const [searchQuery, setSearchQuery] = useState<string>("")
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [result, setResult] = useState<Category[]>([])
-    const [isSearchDone, setIsSearchDone] = useState<boolean>(false)
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [result, setResult] = useState<Category[]>([]);
+    const [isSearchDone, setIsSearchDone] = useState<boolean>(false);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         // for /search with no parameters reset
@@ -34,23 +34,23 @@ export default function SearchPage() {
             setSearchQuery("")
             setIsSearchDone(false)
         }
-    }, [searchParams])
+    }, [searchParams]);
     
     const handleSearchQuery = async (value: string = searchQuery) => {
         try {
-            setSearchQuery(value)
-            setIsLoading(true)
-            const res = await api.get(`/api/item-categories?search=${value}`)
-            const data_result = res.data.data
-            setSearchParams(`?query=${value}`)
-            setResult(data_result)
-            setIsSearchDone(true)
+            setSearchQuery(value);
+            setIsLoading(true);
+            const res = await api.get(`/api/item-categories?search=${value}`);
+            const data_result = res.data.data;
+            setSearchParams(`?query=${value}`);
+            setResult(data_result);
+            setIsSearchDone(true);
         } catch(error) {
-            console.log("Failed to search", error)
+            console.log("Failed to search", error);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
     return (
         <>
         <BasicLayout>
