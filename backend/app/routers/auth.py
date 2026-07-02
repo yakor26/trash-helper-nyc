@@ -53,11 +53,9 @@ def refresh_token(refresh_token: Annotated[str, Depends(get_cookie_auth)], db: d
     """ Refresh access token"""
     if not refresh_token:
         raise refresh_token_exceptions
-    # decode refresh token
     user_name = decode_token(refresh_token, token_type="refresh")
     if not user_name:
         raise refresh_token_exceptions
-    # validate username returned
     user = crud_get_user(db, user_name)
     if not user:
         raise credentials_exceptions

@@ -76,7 +76,7 @@ def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
     compost_pickup = convert_schedule(results.get("sanitationOrganicsCollectionSchedule"))
     recycling_pickup = convert_schedule(results.get("sanitationRecyclingCollectionSchedule"))
     large_item_pickup = convert_schedule(results.get("sanitationBulkPickupSchedule"))
-    street_address = f"{results.get('houseNumber"')} {results.get('streetName1In')}"
+    street_address = f"{results.get('houseNumber')} {results.get('streetName1In')}"
     city = results.get("uspsPreferredCityName")
     zipcode = results.get("zipCode")
 
