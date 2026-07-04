@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import BasicLayout from "../components/BasicLayout";
 import ExampleItems from "../components/ExampleItems";
 import SearchResult from "../components/SearchResult";
-import type { Category } from "../utils/helper";
+import type { ItemCategory } from "../utils/helper";
 import api from "../utils/api";
 import {
     Box,
@@ -24,7 +24,7 @@ import { IoClose } from "react-icons/io5";
 export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [result, setResult] = useState<Category[]>([]);
+    const [result, setResult] = useState<ItemCategory[]>([]);
     const [isSearchDone, setIsSearchDone] = useState<boolean>(false);
     const [searchParams, setSearchParams] = useSearchParams();
 
