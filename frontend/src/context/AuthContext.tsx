@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode}) {
         const getUser = async () => {
         if (token) {
             try {
-                const response = await apiAuth.get("/api/auth/me");
+                const response = await apiAuth.get("/api/user/me");
                 setUser(response.data)
             } catch (error) {
                 logout();
@@ -66,10 +66,6 @@ export function AuthProvider({ children }: { children: ReactNode}) {
 
     };
 
-    const refresh = async () => {
-
-    }
-
 
     return (
         <AuthContext.Provider value={{ user, token, login, logout}}>
@@ -77,5 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode}) {
         </AuthContext.Provider>
     )
     
+}
+export const useAuth = () => {
+    return useContext(AuthContext);
 }
 

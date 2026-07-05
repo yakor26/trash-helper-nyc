@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage.tsx"
 import RegisterPage from "./pages/RegisterPage.tsx"
 import HomePage from "./pages/HomePage.tsx"
 import theme from "./utils/theme.ts"
+import { AuthProvider } from './context/AuthContext.tsx'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,7 +30,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ChakraProvider>
   </StrictMode>
 )

@@ -4,7 +4,8 @@ import BasicLayout from "../components/BasicLayout";
 import ExampleItems from "../components/ExampleItems";
 import SearchResult from "../components/SearchResult";
 import type { ItemCategory } from "../utils/helper";
-import api from "../utils/api";
+import {api} from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 import {
     Box,
     Heading,
@@ -27,6 +28,7 @@ export default function SearchPage() {
     const [result, setResult] = useState<ItemCategory[]>([]);
     const [isSearchDone, setIsSearchDone] = useState<boolean>(false);
     const [searchParams, setSearchParams] = useSearchParams();
+    const { user } = useAuth();
 
     useEffect(() => {
         // for /search with no parameters reset
@@ -55,6 +57,7 @@ export default function SearchPage() {
         <>
         <BasicLayout>
         <Stack spacing={4}>
+            {user?.username ? <Heading size={"md"}>Welcome Back, {user.username}</Heading>: null}
             <Heading size={"lg"}>What item you throwing away?</Heading>
             <Heading size={"sm"} color={"teal.700"}>Search for an item to get instructions on proper disposal.</Heading>
             <HStack>

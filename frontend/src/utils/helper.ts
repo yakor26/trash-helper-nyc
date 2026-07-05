@@ -37,7 +37,7 @@ export type User = {
 export interface AuthProviderProps {
     user: User | null;
     token: string;
-    login: (data: Login) => void;
+    login: (data: Login) => Promise<void>;
     logout: () => void;
 
 }

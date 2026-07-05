@@ -7,7 +7,7 @@ import { IoMdTime } from "react-icons/io";
 import { FaRegTrashAlt, FaRecycle, FaLeaf, FaCouch} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/vazirmatn/wght.css';
-import api from "../utils/api";
+import { api } from "../utils/api";
 
 export default function StatusSidebar() {
     const [status, setStatus] = useState("");

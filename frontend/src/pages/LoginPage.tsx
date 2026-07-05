@@ -12,21 +12,23 @@ import {
     VStack, 
     HStack, 
     Alert, 
-    AlertIcon
+    AlertIcon,
+    Text,
+    Link as ChakraLink
 } from "@chakra-ui/react";
 import { MdOutlinePerson } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import { Link as ReactLink, useNavigate } from "react-router";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-// import api from "../utils/api";
-
+import { useAuth } from "../context/AuthContext"
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loginError, setLoginError] = useState<string>("");
+    const { login } = useAuth();
     const navigate = useNavigate();
     const togglePassword = () => setShowPassword(!showPassword);
 
@@ -34,11 +36,10 @@ export default function LoginPage() {
         try {
             setIsLoading(true);
             setLoginError("");
-            // const data = await api.post("/login", { username, password});
+            await login( {username, password})
             navigate("/search");
-
         } catch(error) {
-            setLoginError("Invalid Username or Password");
+            setLoginError("Invalid Username or Password. Verify login credentials and try again.");
         } finally {
             setIsLoading(false);
         }
@@ -110,23 +111,22 @@ export default function LoginPage() {
                 </InputGroup>
             </FormControl>
             
-                <Button 
-                as={ReactLink}
-                isLoading={isLoading}
-                bg={"brand.orange.400"}
-                color={"brand.white.100"}
-                fontWeight={"extrabold"}
-                spinnerPlacement="start"
-                w={"full"}
-                p={6}
-                onClick={handleLogin}>
-                    Log In
-                </Button>
+            <Button
+            type="submit"
+            isLoading={isLoading}
+            bg={"brand.orange.400"}
+            color={"brand.white.100"}
+            fontWeight={"extrabold"}
+            spinnerPlacement="start"
+            w={"full"}
+            p={6}
+            onClick={handleLogin}>
+                Log In
+            </Button>
+            <Text>Don't have an account? <ChakraLink as={ReactLink} to={"/register"}>Create an Account</ChakraLink></Text>
             </VStack>
         </Box>
         </VStack>
-
-        
         </>
 
     )
