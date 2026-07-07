@@ -48,7 +48,7 @@ def login_user(login_data: Annotated[oauth, Depends()], db: db_depend) -> JSONRe
     return set_tokens(user.username)
 
 
-@router.post("/refresh")
+@router.get("/refresh")
 def refresh_token(refresh_token: Annotated[str, Depends(get_cookie_auth)], db: db_depend) -> Token:
     """ Refresh access token"""
     if not refresh_token:

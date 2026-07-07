@@ -17,6 +17,7 @@ class AddressBase(BaseModel):
     schedule_id: int
     street_address: str
     city: str
+    state: str
     zip_code: str
 
     model_config = ConfigDict(from_attributes=True)

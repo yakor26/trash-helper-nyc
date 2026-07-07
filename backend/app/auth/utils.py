@@ -17,8 +17,8 @@ load_dotenv()
 ACCESS_SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
 REFRESH_SECRET_KEY = os.getenv("REFRESH_SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINS = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 7
+ACCESS_TOKEN_EXPIRE_HRS = 2
+REFRESH_TOKEN_EXPIRE_DAYS = 3
 password_hasher = PasswordHash.recommended()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 credentials_exceptions = HTTPException(
@@ -55,7 +55,7 @@ def create_token(data: dict, token_type: str = "access") -> str:
     """ Create JWT access and refresh token """
     secret_key = ACCESS_SECRET_KEY if token_type == "access" else REFRESH_SECRET_KEY
     data_payload = data.copy()
-    expiration = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINS)
+    expiration = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HRS)
     if token_type == "refresh":
         expiration = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     data_payload.update({"exp": expiration})
