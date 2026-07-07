@@ -44,6 +44,7 @@ export type Address = {
 }
 
 export type Schedule = {
+    id: number;
     days_trash: string[];
     days_recycling: string[];
     days_compost: string[];
