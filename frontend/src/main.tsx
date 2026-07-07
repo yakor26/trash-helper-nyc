@@ -10,6 +10,7 @@ import SchedulePage from "./pages/SchedulePage.tsx"
 import LoginPage from "./pages/LoginPage.tsx"
 import RegisterPage from "./pages/RegisterPage.tsx"
 import HomePage from "./pages/HomePage.tsx"
+import UserProfilePage from './pages/UserProfilePage.tsx'
 import { ProtectedRoute } from './components/ProtectedRoute.tsx'
 import { RestrictedProtectedRoute } from './components/RestrictedPublicRoute.tsx'
 import theme from "./utils/theme.ts"
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       {Component: ProtectedRoute,
         children: [
           {path: "schedule", Component: SchedulePage},
+          {path: "profile", Component: UserProfilePage}
         ]
       },
       {path: "*", element: <Navigate to={"/"} replace />}

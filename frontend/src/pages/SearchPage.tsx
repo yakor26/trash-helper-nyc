@@ -57,7 +57,7 @@ export default function SearchPage() {
         <>
         <BasicLayout>
         <Stack spacing={4}>
-            {user?.username ? <Heading size={"md"}>Welcome Back, {user.username}</Heading>: null}
+            {user?.username ? <Heading size={"md"} color={"gray.600"}>Welcome Back, {user.username}</Heading>: null}
             <Heading size={"lg"}>What item you throwing away?</Heading>
             <Heading size={"sm"} color={"teal.700"}>Search for an item to get instructions on proper disposal.</Heading>
             <HStack>

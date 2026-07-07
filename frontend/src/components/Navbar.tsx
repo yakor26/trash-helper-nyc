@@ -1,4 +1,4 @@
-import { Box, HStack, Flex, Heading, Icon } from "@chakra-ui/react";
+import { Box, HStack, Flex, Heading, Icon, Wrap, Avatar, WrapItem } from "@chakra-ui/react";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router";
 import { FaRecycle } from "react-icons/fa";
@@ -33,9 +33,17 @@ export default function Navbar() {
                         Search
                     </ChakraLink>
                     {user ? 
+                    <>
                     <ChakraLink onClick={handleLogout} fontSize="2xl" border={1} bg="brand.orange.400" borderRadius="full" px={7} py={1} _hover={{ bg: "orange.300", textDecoration: "none" }}>
                         Logout
-                    </ChakraLink>: 
+                    </ChakraLink>
+                    <Wrap>
+                        <WrapItem>
+                            <Avatar size={"md"} name={user.username} as={ReactRouterLink} to={"/profile"}/>
+                        </WrapItem>
+                    </Wrap>
+                    </>
+                    : 
                     <ChakraLink as={ReactRouterLink} to="/login" fontSize="2xl" border={1} bg="brand.orange.400" borderRadius="full" px={7} py={1} _hover={{ bg: "orange.300", textDecoration: "none" }}>
                         Login
                     </ChakraLink>}

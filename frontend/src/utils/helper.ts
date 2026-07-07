@@ -30,8 +30,24 @@ export type User = {
     username: string;
     email: string;
     phone_number: string;
-    allow_notifications: boolean;
-    addresses: string[];
+    allow_notifications: string;
+    addresses: Address[];
+}
+
+export type Address = {
+    id: number;
+    schedule_id: number;
+    street_address: string;
+    city: string;
+    state: "NY";
+    zip_code: string;
+}
+
+export type Schedule = {
+    days_trash: string[];
+    days_recycling: string[];
+    days_compost: string[];
+    days_large_items: string[];
 }
 
 export interface AuthProviderProps {
