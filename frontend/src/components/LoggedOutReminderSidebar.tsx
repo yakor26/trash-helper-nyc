@@ -28,14 +28,14 @@ export default function LoggedOutReminderSidebar() {
         <ButtonGroup variant={"solid"} spacing={"2"}>
             <Button bg="brand.orange.400" 
             borderRadius={"3xl"} 
-            px={"8"}
+            px={20}
             as={ReactRouterLink}
             to={"/register"}
             _hover={{ bg: "blackAlpha.300" }}>
                 Create Account</Button>
             <Button bg="brand.blue.300" 
             borderRadius={"3xl"} 
-            px={"16"} 
+            px={16} 
             as={ReactRouterLink}
             to={"/login"}
             _hover={{ bg: "blackAlpha.400" }}>
