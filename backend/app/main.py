@@ -16,9 +16,9 @@ from datetime import datetime, timedelta
 # on startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler = BackgroundScheduler()
+    scheduler = BackgroundScheduler({"apscheduler.timezone": "America/New_York"})
     scheduler.add_job(collection_job, "cron", hour=16, next_run_time=datetime.now())
-    scheduler.add_job(notification_job, "cron", hour=18, next_run_time=datetime.now() + timedelta(minutes=3))
+    scheduler.add_job(notification_job, "cron", hour=20, next_run_time=datetime.now() + timedelta(minutes=3))
     scheduler.start()
     yield
     scheduler.shutdown()
@@ -28,7 +28,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://trash-helper-nyc-git-main-abisolakorede-7469s-projects.vercel.app"
+        "https://trash-helper-nyc.vercel.app"
         ],
     allow_credentials=True,
     allow_methods=["*"],
