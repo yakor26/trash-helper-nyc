@@ -15,7 +15,7 @@ export default function BasicLayout({ children }: LayoutProps) {
     return (
         <>
         <Flex gap={6} mx={"auto"} my={"8"} maxW={"container.2xl"} width={"container.xl"}>
-            <VStack maxW={"container.2xl"} width={"container.xl"} spacing={"4"} align={"stretch"}>
+            <VStack w={"sm"} flexShrink={0} spacing={"4"} align={"stretch"}>
                 {user ? <LoggedInReminderSidebar/>: <LoggedOutReminderSidebar/> }
                 <StatusSidebar/>
             </VStack>

@@ -13,7 +13,7 @@ export default function LoggedInReminderSidebar() {
             borderStyle={"solid"} 
             borderRadius={"3xl"} 
             boxShadow={"2xl"}
-            maxWidth={"2xl"}
+            width={"full"}
             px={"14"}
             py={"8"}
             position={"relative"}
