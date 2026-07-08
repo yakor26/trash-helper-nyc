@@ -1,5 +1,7 @@
 import MainSection from "../components/MainSection";
-import ScheduleSidebar from "../components/ScheduleSidebar";
+import LoggedOutReminderSidebar from "./LoggedOutReminderSidebar";
+import LoggedInReminderSidebar from "./LoggedInReminderSidebar";
+import { useAuth } from "../context/AuthContext";
 import StatusSidebar from "../components/StatusSidebar";
 import type { ReactNode } from "react";
 import { VStack, Flex } from "@chakra-ui/react";
@@ -9,11 +11,12 @@ interface LayoutProps {
 }
 
 export default function BasicLayout({ children }: LayoutProps) {
+    const { user } = useAuth();
     return (
         <>
-        <Flex gap={6} mx={"auto"} my={"8"} maxW={"container.xl"}>
-            <VStack maxW={"container.xl"} spacing={"4"} align={"stretch"}>
-                <ScheduleSidebar/>
+        <Flex gap={6} mx={"auto"} my={"8"} maxW={"container.2xl"} width={"container.xl"}>
+            <VStack maxW={"container.2xl"} width={"container.xl"} spacing={"4"} align={"stretch"}>
+                {user ? <LoggedInReminderSidebar/>: <LoggedOutReminderSidebar/> }
                 <StatusSidebar/>
             </VStack>
         
