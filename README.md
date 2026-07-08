@@ -81,8 +81,40 @@ The frontend runs on `http://localhost:5173` and the backend API on `http://loca
 
 #### Usage
 
+<img width="1417" height="710" alt="Screenshot 2026-07-08 at 1 06 53 PM" src="https://github.com/user-attachments/assets/baa3a5a1-6954-4ba5-be4c-a34ab7cb3d68" />
+Home Page
+<br><br>
 
-## TODO
+<img width="1339" height="738" alt="Screenshot 2026-07-08 at 1 11 25 PM" src="https://github.com/user-attachments/assets/5d926407-4f7c-4c46-864d-79da02d481fa" />
+Search Page (not logged in)
+<br><br>
+
+
+<img width="1270" height="722" alt="Screenshot 2026-07-08 at 1 11 43 PM" src="https://github.com/user-attachments/assets/a9281c03-6b95-4872-91bb-d77e1e8e6066" />
+Login Page
+<br><br>
+
+
+<img width="1325" height="736" alt="Screenshot 2026-07-08 at 1 11 57 PM" src="https://github.com/user-attachments/assets/1db98389-0d0f-4863-9717-d0b3161650cf" />
+Search Page (logged in)
+<br><br>
+
+
+<img width="1346" height="742" alt="Screenshot 2026-07-08 at 1 12 35 PM" src="https://github.com/user-attachments/assets/616edfab-da95-405a-9ce1-03b7ec73e872" />
+Example search
+<br><br>
+
+
+<img width="1174" height="742" alt="Screenshot 2026-07-08 at 1 37 14 PM" src="https://github.com/user-attachments/assets/a69a6f74-56ab-4bc1-943b-678d46de7c50" />
+User Profile
+<br><br>
+
+<img width="722" height="595" alt="Screenshot 2026-07-08 at 1 13 28 PM" src="https://github.com/user-attachments/assets/97f79982-9caa-4104-b4f3-97672572b7b2" />
+<br><br>
+
+
+
+### TODO
 - Refresh token implementation on the frontend is still in progress
 - Register page is not yet functional (backend is complete)
 
