@@ -117,6 +117,7 @@ User Profile
 ### TODO
 - Refresh token implementation on the frontend is still in progress
 - Register page is not yet functional (backend is complete)
+- Add image search for item disposal search
 
 ### Deployment
 - Frontend: https://trash-helper-nyc.vercel.app
