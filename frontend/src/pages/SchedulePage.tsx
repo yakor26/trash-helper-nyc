@@ -14,6 +14,7 @@ export default function SchedulePage() {
     const [schedules, setSchedules] = useState<Schedule[]>([]);
     useEffect(() => {
         const getSchedules = async () => {
+        if (!addresses) return;
         try {
             const responses = await Promise.all(addresses.map(async address => {
                 return (await apiAuth.get(`/api/addresses/${address.id}/schedule`)).data;
