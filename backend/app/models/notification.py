@@ -12,7 +12,7 @@ class Notification(Base):
     __tablename__ = "notifications"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"), nullable=False)
+    collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id", ondelete="cascade"), nullable=False)
     collection_status: Mapped[CollectionStatus] = mapped_column(Enum(CollectionStatus), nullable=False)
     message: Mapped[str] = mapped_column(String(500), nullable=False)
     is_sent: Mapped[bool] = mapped_column(Boolean, default=False)

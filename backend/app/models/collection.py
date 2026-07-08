@@ -29,14 +29,14 @@ class Collection(Base):
     __tablename__ = "collections"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     schedule_id = mapped_column(Integer, ForeignKey("schedules.id"), nullable=False)
-    address_id = mapped_column(Integer, ForeignKey("addresses.id"), nullable=False)
+    address_id = mapped_column(Integer, ForeignKey("addresses.id", ondelete="cascade"), nullable=False)
     collection_date: Mapped[date] = mapped_column(Date, nullable=False)
     updated_collection_date: Mapped[date] = mapped_column(Date, nullable=False)
     status: Mapped[CollectionStatus] = mapped_column(Enum(CollectionStatus), nullable=False)
     delay_reason: Mapped[str] = mapped_column(String(200), nullable=True)
     schedule: Mapped["Schedule"] = relationship(back_populates="collections")
     address: Mapped["Address"] = relationship(back_populates="collections")
-    notifications: Mapped[List["Notification"]] = relationship(back_populates="collection")
+    notifications: Mapped[List["Notification"]] = relationship(back_populates="collection", cascade="all, delete-orphan")
     collection_types: Mapped[List["CollectionType"]] = relationship(
         back_populates="collections",
         secondary=collections_collection_types

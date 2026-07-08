@@ -86,6 +86,7 @@ def get_sanitation_info(input_addr: str) -> GeoclientAPIResponse:
             "address": {
                 "street_address": street_address,
                 "city": city,
+                "state": "NY",
                 "zip_code": zipcode
 
             },

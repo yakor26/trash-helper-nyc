@@ -24,4 +24,4 @@ class Address(Base):
     zip_code: Mapped[str] = mapped_column(String(5), nullable=False)
     user: Mapped["User"] = relationship(back_populates="addresses")
     schedule: Mapped["Schedule"] = relationship(back_populates="addresses")
-    collections: Mapped[List["Collection"]] = relationship(back_populates="address")
+    collections: Mapped[List["Collection"]] = relationship(back_populates="address", cascade="all, delete-orphan")

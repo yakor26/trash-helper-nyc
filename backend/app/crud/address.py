@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.address import Address
 from app.schemas.user import UserBase
 from app.schemas.address import AddressUpdate, AddressBase, AddressResponse
+from sqlalchemy.exc import IntegrityError
 from app.schemas.address import GeoclientAPIResponse
 
 
@@ -58,10 +59,13 @@ def create_address(
 
 def delete_address(db: Session, user_id: int, address_id: int) -> None:
     """ Delete user address"""
+    # try:
     db.execute(
         delete(Address).where(
             Address.id == address_id,
             Address.user_id == user_id))
+# except IntegrityError:
+    #     db.rollback()
     db.commit()
 
 
