@@ -1,13 +1,26 @@
-import { useState} from "react";
-import BasicLayout from "../components/BasicLayout"
-import { useAuth } from "../context/AuthContext"
-import { Heading, Text, Button, Icon, HStack, VStack, Box, FormControl, InputGroup, Input, InputRightElement, InputRightAddon, IconButton, FormLabel } from "@chakra-ui/react";
-
+import { useState } from "react";
+import BasicLayout from "../components/BasicLayout";
+import { useAuth } from "../context/AuthContext";
+import type { Address } from "../utils/helper";
+import { 
+    Heading, 
+    Text, 
+    Button, 
+    Icon, 
+    HStack, 
+    VStack, 
+    Box, 
+    FormControl, 
+    InputGroup, 
+    Input, 
+    InputRightElement, 
+    IconButton, 
+    FormLabel 
+} from "@chakra-ui/react";
 import { 
     FaToggleOff,
     FaToggleOn,
     FaPhone,
-    FaLock
 } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
 import { MdEmail, MdOutlinePerson } from "react-icons/md";
@@ -15,14 +28,13 @@ import { IoLocation } from "react-icons/io5";
 import { DeleteDialog } from "../components/DeleteDialog";
 import { apiAuth } from "../utils/api";
 
-
 export default function UserProfilePage() {
-
     const { user } = useAuth();
-    const [addresses, setAddresses] = useState<Address[]>(user?.addresses);
+    const [addresses, setAddresses] = useState<Address[]>(user?.addresses || []);
     const [newAddress, setNewAddress] = useState<string>("");
+    const [enableNotifications, setEnableNotifications] = useState<boolean>(user?.allow_notifications === true) ;
+    const [isEditing, setIsEditing] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
-    const phoneNumber = user?.phone_number;
     const account = [
         {label: "Username", icon: MdOutlinePerson, type: user?.username},
         {label: "Email", icon: MdEmail, type: user?.email},
@@ -33,16 +45,21 @@ export default function UserProfilePage() {
             const response = await apiAuth.post("/api/addresses", {full_address: newAddress, address_type: "residential"});
             setAddresses(prev => [...prev, response.data]);
             setNewAddress("");
-        } catch (error) {
+        } catch {
             setError("Unable to add address")
 
         }
+    };
+    const handleNotificationToggle = async () => {
+        try {
+            await apiAuth.patch("/api/user", {allow_notifications: !enableNotifications});
+            setEnableNotifications(!enableNotifications);
+        } catch {
+            setError("Unable to update notification preference")
+        }
     }
-    const [enableNotifications, setEnableNotifications] = useState<string>(user?.allow_notifications || "false") ;
-    const [isEditing, setIsEditing] = useState<boolean>(false);
  
     return (
-        <>
         <BasicLayout>
         <Heading size={"lg"}>Profile Settings</Heading>
         <VStack align={"start"} spacing={6}>
@@ -90,7 +107,7 @@ export default function UserProfilePage() {
                 />
                 <InputRightElement py={8}>
                     <IconButton
-                            aria-label="delete"
+                            aria-label="add"
                             icon={<IoMdAddCircle/>}
                             color='green'
                             bg={"transparent"}
@@ -101,16 +118,23 @@ export default function UserProfilePage() {
             </InputGroup>
         </FormControl>
 
-    
         <Heading size={"md"}>Notifications</Heading>
-        <Text>Text Notification Alerts: 
-            {enableNotifications}
-        </Text>
-        
+        <HStack borderRadius={"2xl"} bg={"gray.200"} width={"xl"} py={6} px={4} position={"relative"}>
+        <Text fontWeight={"semibold"}>Allow Text Notification Alerts</Text>
+        <IconButton aria-label="notifications"
+        icon={enableNotifications === true ? <FaToggleOn/>: <FaToggleOff/>}
+        position={"absolute"}
+        right={2} 
+        top={2}
+        size={"lg"}
+        bg={"transparent"}
+        color={"brand.green.600"}
+        onClick={handleNotificationToggle}
+        />
+        </HStack>
+        {error && <Text color="red.500">{error}</Text>}
         <Button bg="brand.orange.400" fontWeight={"bold"}>Save Changes</Button>
         </VStack>
         </BasicLayout>
-        </>
-
     )
 }

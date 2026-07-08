@@ -30,7 +30,7 @@ export type User = {
     username: string;
     email: string;
     phone_number: string;
-    allow_notifications: string;
+    allow_notifications: boolean;
     addresses: Address[];
 }
 
