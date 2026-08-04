@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError
 from app.apis.text_notifications import send_text
 from sqlalchemy.orm import Session
+import logging
 
 
 def create_notification_message(
@@ -89,7 +90,7 @@ def send_notifications():
     db = SessionLocal()
     notifications = db.execute(
         select(Notification).where(
-            Notification.sent_at == None
+            Notification.sent_at.is_(None)
         )).scalars().all()
     for notif in notifications:
         text_response = send_text(TextNotificationRequest(
@@ -116,14 +117,18 @@ def delete_notifications():
     db.commit()
     db.close()
 
+
 def get_all_notifications():
     pass
 
+
 def notification_job():
-    """"""
+    """ Run all notification logic"""
+    logging.info(msg="Running Notification Job")
     delete_notifications()
     create_notifications()
     send_notifications()
+    logging.info(msg="Completed Notification Job")
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ from app.schemas.address import AddressResponse
 from app.apis.nyc_311 import get_collection_status
 from datetime import datetime, timedelta
 from app.database import SessionLocal
+import logging
 
 
 def get_collection_status_api() -> tuple[CollectionStatus, CollectionStatusResponse]:
@@ -142,10 +143,12 @@ def delete_collection_event():
 
 
 def collection_job():
-    """ """
+    """ Run all collection logic"""
+    logging.info(msg="Running Collection Job")
     delete_collection_event()
     update_collection_event()
     create_collection_event()
+    logging.info(msg="Completed Collection Job")
 
 
 if __name__ == "__main__":

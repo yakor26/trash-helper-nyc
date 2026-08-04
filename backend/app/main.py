@@ -11,6 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app.crud.collection import collection_job
 from app.crud.notification import notification_job
 from datetime import datetime, timedelta
+import logging
 
 
 # on startup
@@ -23,6 +24,8 @@ async def lifespan(app: FastAPI):
     yield
     scheduler.shutdown()
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s:%(message)s', datefmt="%m/%d/%Y %I:%M:%S %p", level=logging.INFO)
 app = FastAPI(title="NYC Waste Helper", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
