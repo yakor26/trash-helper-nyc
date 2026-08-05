@@ -15,7 +15,6 @@ import {
     AlertIcon,
     Text,
     Checkbox,
-    CheckboxGroup,
     Link as ChakraLink
 } from "@chakra-ui/react";
 import { MdOutlinePerson, MdOutlineMail } from "react-icons/md";
