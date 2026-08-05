@@ -67,7 +67,7 @@ export default function LoginPage() {
             <VStack spacing={6}>
             <FormControl>
                 <HStack mb={2}>
-                <Icon as={MdOutlinePerson} boxSize={6} color={"gray.600"}/>
+                <Icon as={MdOutlinePerson} boxSize={4} color={"gray.600"}/>
                 <FormLabel mb={0}>Username</FormLabel>
                 </HStack>
                 <Input type='text'
@@ -81,7 +81,7 @@ export default function LoginPage() {
 
             <FormControl>
                 <HStack mb={2}>
-                <Icon as={FaLock} boxSize={6} color={"gray.600"}/>
+                <Icon as={FaLock} boxSize={4} color={"gray.600"}/>
                 <FormLabel mb={0}>Password</FormLabel>
                 </HStack>
                 <InputGroup>

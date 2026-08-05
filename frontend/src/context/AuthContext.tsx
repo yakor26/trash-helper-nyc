@@ -1,5 +1,5 @@
 import  { createContext, useState, useContext, useEffect, useCallback } from "react";
-import type { AuthProviderProps, Login, User } from "../utils/helper";
+import type { AuthProviderProps, Login, User, Register } from "../utils/helper";
 import type { ReactNode } from "react"; 
 import { api } from "../utils/api";
 import { apiAuth } from "../utils/api";
@@ -8,6 +8,7 @@ export const AuthContext = createContext<AuthProviderProps>({
     user: null,
     token: "",
     login: async () => {},
+    register: async () => {},
     logout: () => {}
 })
 
@@ -54,20 +55,21 @@ export function AuthProvider({ children }: { children: ReactNode}) {
         return;
     };
 
-    // const register = async (data: Register) => {
-    //     try {
-    //         const response = await api.post("/api/auth/register", data);
-    //         setToken(response.data.access_token)
-    //         localStorage.setItem("access_token", response.data.access_token);
-    //     } catch (error) {
-    //         console.log("Unable to register. Confirm meet validation requirements and try again.");
-    //     }
-    //     return;
-    // };
+    const register = async (data: Register) => {
+        try {
+            const response = await api.post("/api/auth/register", data);
+            setToken(response.data.access_token)
+            localStorage.setItem("access_token", response.data.access_token);
+        } catch (error) {
+            const msg = "Unable to register. Confirm meet validation requirements and try again.";
+            throw new Error(msg, {cause: error});
+        }
+        return;
+    };
 
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout}}>
+        <AuthContext.Provider value={{ user, token, login, register, logout}}>
             {children}
         </AuthContext.Provider>
     )

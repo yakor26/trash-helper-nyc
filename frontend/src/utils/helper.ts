@@ -55,6 +55,7 @@ export interface AuthProviderProps {
     user: User | null;
     token: string;
     login: (data: Login) => Promise<void>;
+    register: (data: Register) => Promise<void>;
     logout: () => void;
 
 }
